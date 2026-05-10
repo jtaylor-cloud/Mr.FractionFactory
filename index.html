@@ -1,0 +1,3804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mr. Fraction's Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Black+Han+Sans&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       PHASE 1 — DESIGN SYSTEM & SHELL
+       ============================================================ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* --- CSS Variables --- */
+    :root {
+      --cream:        #f5ede0;
+      --cream-light:  #fdf8f0;
+      --cream-mid:    #ede0cc;
+      --brown-dark:   #2c2214;
+      --brown-mid:    #5a3e28;
+      --brown-muted:  #7a5c3e;
+      --brown-hint:   #a08060;
+      --orange:       #c96a1f;
+      --orange-light: #e8843a;
+      --orange-pale:  #fef3e2;
+      --teal:         #2e7a6e;
+      --teal-light:   #3d9e8e;
+      --teal-pale:    #e8f5f3;
+      --green:        #4a7c2f;
+      --green-light:  #5a9e3a;
+      --green-pale:   #edf7e4;
+      --blue:         #2a5fa0;
+      --blue-light:   #378add;
+      --blue-pale:    #eef4fd;
+      --red:          #c0392b;
+      --red-pale:     #fdecea;
+      --border:       #c8b89a;
+      --border-light: #ddd0ba;
+      --shadow:       rgba(44, 34, 20, 0.12);
+      --font-display: 'Black Han Sans', sans-serif;
+      --font-body:    'Atkinson Hyperlegible', sans-serif;
+      --font-serif:   'Libre Baskerville', serif;
+      --radius:       12px;
+      --radius-sm:    8px;
+      --radius-xs:    5px;
+    }
+
+    /* --- Base --- */
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--cream);
+      color: var(--brown-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+    }
+
+    /* --- Gear Watermarks (appear on every page) --- */
+    .gear-watermark {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .gear-watermark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    /* Corner gears */
+    .gear-tl {
+      top: -30px; left: -30px;
+      width: 180px; height: 180px;
+      animation: gear-spin 20s linear infinite;
+      filter: opacity(0.12);
+    }
+    .gear-br {
+      bottom: 40px; right: -20px;
+      width: 240px; height: 240px;
+      animation: gear-spin 28s linear infinite reverse;
+      filter: opacity(0.12);
+    }
+    .gear-tr {
+      top: 30%; right: -40px;
+      width: 140px; height: 140px;
+      animation: gear-spin 16s linear infinite;
+      filter: opacity(0.12);
+    }
+    .gear-bl {
+      bottom: -20px; left: -30px;
+      width: 160px; height: 160px;
+      animation: gear-spin 22s linear infinite reverse;
+      filter: opacity(0.12);
+    }
+    /* Mid-page accent gears */
+    .gear-mid-r {
+      top: 55%; right: -50px;
+      width: 200px; height: 200px;
+      animation: gear-spin 32s linear infinite;
+      filter: opacity(0.08);
+    }
+    .gear-mid-l {
+      top: 42%; left: -50px;
+      width: 170px; height: 170px;
+      animation: gear-spin 24s linear infinite reverse;
+      filter: opacity(0.08);
+    }
+    /* Small accent gears */
+    .gear-sm-tr {
+      top: 8%; right: 12%;
+      width: 80px; height: 80px;
+      animation: gear-spin 12s linear infinite reverse;
+      filter: opacity(0.09);
+    }
+    .gear-sm-bl {
+      bottom: 18%; left: 8%;
+      width: 90px; height: 90px;
+      animation: gear-spin 14s linear infinite;
+      filter: opacity(0.09);
+    }
+    .gear-sm-tl {
+      top: 15%; left: 10%;
+      width: 70px; height: 70px;
+      animation: gear-spin 10s linear infinite;
+      filter: opacity(0.08);
+    }
+    .gear-sm-br {
+      bottom: 30%; right: 10%;
+      width: 75px; height: 75px;
+      animation: gear-spin 18s linear infinite reverse;
+      filter: opacity(0.08);
+    }
+    @keyframes gear-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* --- Ticker Tape --- */
+    .ticker-wrap {
+      width: 100%;
+      background: var(--brown-dark);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 7px 0;
+      position: relative;
+      z-index: 10;
+    }
+    .ticker-wrap.light {
+      background: var(--cream-mid);
+    }
+    .ticker-track {
+      display: inline-flex;
+      animation: ticker-scroll 28s linear infinite;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      font-family: var(--font-display);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--border);
+      text-transform: uppercase;
+      padding: 0 18px;
+    }
+    .ticker-dot {
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--orange);
+      margin: 0 8px;
+      vertical-align: middle;
+    }
+    .ticker-wrap.light .ticker-item { color: var(--brown-muted); }
+    .ticker-wrap.light .ticker-dot  { background: var(--orange); }
+    @keyframes ticker-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* --- Top Nav Bar --- */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--cream-light);
+      border-bottom: 2px solid var(--border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .nav-logo img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+    .nav-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .nav-logo-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      color: var(--brown-dark);
+      letter-spacing: 0.05em;
+    }
+    .nav-logo-sub {
+      font-family: var(--font-display);
+      font-size: 10px;
+      color: var(--orange);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 24px;
+      border: 2px solid var(--border);
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brown-mid);
+      cursor: pointer;
+      transition: all 0.18s;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .nav-btn:hover {
+      background: var(--cream-mid);
+      border-color: var(--brown-muted);
+      color: var(--brown-dark);
+    }
+    .nav-btn.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+    }
+    .nav-btn .nav-icon { font-size: 14px; }
+
+    /* --- Page Wrapper (all content pages) --- */
+    .page {
+      display: none;
+      position: relative;
+      min-height: calc(100vh - 140px);
+    }
+    .page.active { display: block; }
+
+    /* --- Section Header (used inside each station page) --- */
+    .station-header {
+      padding: 28px 32px 20px;
+      border-bottom: 2px solid var(--border-light);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .station-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .station-thumb {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .station-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .station-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+    }
+    .station-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      color: var(--brown-dark);
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+    .station-desc {
+      font-size: 14px;
+      color: var(--brown-muted);
+      margin-top: 4px;
+      max-width: 420px;
+    }
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+      background: var(--cream-light);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brown-mid);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .back-btn:hover {
+      background: var(--cream-mid);
+      border-color: var(--brown-mid);
+    }
+
+    /* --- Content Area --- */
+    .content-area {
+      padding: 24px 32px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* --- Content Cards --- */
+    .card {
+      background: var(--cream-light);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brown-dark);
+      margin-bottom: 14px;
+    }
+    .card-title-icon { font-size: 16px; }
+
+    /* --- Callout / Tip boxes --- */
+    .callout {
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+    .callout-orange {
+      background: var(--orange-pale);
+      border-left: 4px solid var(--orange);
+      color: var(--brown-dark);
+    }
+    .callout-teal {
+      background: var(--teal-pale);
+      border-left: 4px solid var(--teal);
+      color: var(--brown-dark);
+    }
+    .callout-green {
+      background: var(--green-pale);
+      border-left: 4px solid var(--green);
+      color: var(--brown-dark);
+    }
+    .callout-blue {
+      background: var(--blue-pale);
+      border-left: 4px solid var(--blue);
+      color: var(--brown-dark);
+    }
+
+    /* --- Fraction Display Widget --- */
+    .frac-display {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: var(--font-body);
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .frac-num   { color: var(--red); }
+    .frac-line  { height: 3px; min-width: 28px; background: var(--brown-dark); border-radius: 2px; margin: 5px 0; }
+    .frac-den   { color: var(--teal); }
+
+    /* --- Buttons --- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border-radius: var(--radius-sm);
+      border: 2px solid transparent;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+    .btn-orange {
+      background: var(--orange);
+      color: #fff;
+      border-color: var(--orange);
+    }
+    .btn-orange:hover {
+      background: var(--orange-light);
+      border-color: var(--orange-light);
+    }
+    .btn-teal {
+      background: var(--teal);
+      color: #fff;
+      border-color: var(--teal);
+    }
+    .btn-teal:hover {
+      background: var(--teal-light);
+      border-color: var(--teal-light);
+    }
+    .btn-green {
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green);
+    }
+    .btn-green:hover {
+      background: var(--green-light);
+      border-color: var(--green-light);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--brown-mid);
+      border-color: var(--border);
+    }
+    .btn-outline:hover {
+      background: var(--cream-mid);
+      border-color: var(--brown-mid);
+    }
+
+    /* --- Input Fields --- */
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--cream-light);
+      font-family: var(--font-body);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--brown-dark);
+      text-align: center;
+      outline: none;
+      transition: border-color 0.15s;
+      -moz-appearance: textfield;
+    }
+    .input-field::-webkit-outer-spin-button,
+    .input-field::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .input-field:focus { border-color: var(--orange); }
+    .input-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brown-muted);
+      text-align: center;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* --- Range Sliders --- */
+    input[type=range].factory-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background: var(--cream-mid);
+      border: 1.5px solid var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range].factory-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid var(--border);
+      cursor: pointer;
+      box-shadow: 0 2px 6px var(--shadow);
+      transition: border-color 0.15s, transform 0.1s;
+    }
+    input[type=range].factory-slider:hover::-webkit-slider-thumb {
+      border-color: var(--orange);
+      transform: scale(1.12);
+    }
+
+    /* --- Progress Bar --- */
+    .progress-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: var(--border-light);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--orange);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    /* --- Mr. Fraction Companion (bottom-right floating) --- */
+    .mr-companion {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .mr-companion.hidden { display: none; }
+    .mr-speech-bubble {
+      background: var(--cream-light);
+      border: 2px solid var(--border);
+      border-radius: 14px 14px 4px 14px;
+      padding: 10px 14px;
+      max-width: 220px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--brown-dark);
+      box-shadow: 0 4px 16px var(--shadow);
+      pointer-events: auto;
+      position: relative;
+      animation: bubble-in 0.3s ease;
+    }
+    .mr-speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      right: 20px;
+      border: 5px solid transparent;
+      border-top-color: var(--border);
+    }
+    .mr-speech-bubble::before {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      right: 21px;
+      border: 4px solid transparent;
+      border-top-color: var(--cream-light);
+      z-index: 1;
+    }
+    @keyframes bubble-in {
+      from { opacity: 0; transform: translateY(8px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .mr-figure {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    }
+
+    /* --- Footer --- */
+    .site-footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: var(--brown-hint);
+      border-top: 1px solid var(--border-light);
+      background: var(--cream);
+      letter-spacing: 0.05em;
+    }
+
+    /* --- Loading Screen --- */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--cream);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      isolation: auto;
+    }
+    .loading-gif-wrap {
+      width: 160px; height: 160px;
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .loading-title-sm {
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brown-hint);
+    }
+    .loading-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      color: var(--brown-dark);
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+    .loading-title span { color: var(--orange); }
+    .loading-gif {
+      width: 160px;
+      height: 160px;
+      object-fit: contain;
+    }
+    /* GIF is already wrapped in .loading-gif-wrap */
+    .loading-status {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--brown-muted);
+      letter-spacing: 0.04em;
+    }
+    .loading-bar-wrap {
+      width: 280px;
+      height: 8px;
+      background: var(--border-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .loading-bar-fill {
+      height: 100%;
+      background: var(--orange);
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .loading-dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .loading-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .loading-dot.active { background: var(--orange); }
+    .loading-dot.done   { background: var(--green); }
+
+    /* --- Utility --- */
+    .text-orange  { color: var(--orange); }
+    .text-teal    { color: var(--teal); }
+    .text-green   { color: var(--green); }
+    .text-muted   { color: var(--brown-muted); }
+    .text-center  { text-align: center; }
+    .font-display { font-family: var(--font-display); }
+    .mt-sm  { margin-top: 8px; }
+    .mt-md  { margin-top: 16px; }
+    .mt-lg  { margin-top: 24px; }
+    .mb-sm  { margin-bottom: 8px; }
+    .mb-md  { margin-bottom: 16px; }
+
+    /* ============================================================
+       PHASE 2 — LOADING SCREEN
+       ============================================================ */
+
+    /* (Styles above already cover it) */
+
+    /* ============================================================
+       PHASE 2 — HOME PAGE
+       ============================================================ */
+
+    #page-home { background: var(--cream); }
+
+    .home-hero {
+      padding: 40px 40px 32px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      position: relative;
+    }
+    .home-hero-left { flex: 1; max-width: 460px; }
+    .home-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brown-hint);
+      margin-bottom: 10px;
+    }
+    .home-eyebrow-line {
+      height: 2px;
+      width: 32px;
+      background: var(--orange);
+      border-radius: 1px;
+    }
+    .home-heading {
+      font-family: var(--font-display);
+      font-size: 52px;
+      line-height: 1;
+      color: var(--brown-dark);
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+    }
+    .home-heading-accent {
+      font-family: var(--font-display);
+      font-size: 52px;
+      line-height: 1;
+      color: var(--orange);
+      letter-spacing: 0.04em;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .home-intro {
+      font-size: 16px;
+      color: var(--brown-mid);
+      line-height: 1.7;
+      max-width: 380px;
+    }
+    .home-hero-right {
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .home-hero-img-wrap {
+      animation: hero-float 3.5s ease-in-out infinite;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .home-hero-img {
+      width: 180px;
+      height: 180px;
+      object-fit: contain;
+    }
+    @keyframes hero-float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-12px); }
+    }
+    .home-speech {
+      background: var(--orange);
+      color: #fff;
+      border-radius: 20px 20px 4px 20px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      max-width: 200px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(201,106,31,0.35);
+      /* animation moved to wrapper */
+    }
+
+    /* Station chooser */
+    .stations-section {
+      padding: 0 40px 32px;
+    }
+    .stations-heading {
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 0.12em;
+      color: var(--brown-dark);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stations-heading::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      border-radius: 1px;
+    }
+    .station-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .station-card {
+      background: var(--cream-light);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .station-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px var(--shadow);
+      border-color: var(--brown-muted);
+    }
+    .station-card.s1:hover { border-color: var(--orange); }
+    .station-card.s2:hover { border-color: var(--teal); }
+    .station-card.s3:hover { border-color: var(--brown-mid); }
+    .station-card.s4:hover { border-color: var(--green); }
+    .station-card.s4 { border-color: var(--green); }
+
+    .station-card-img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+    .station-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .s1 .station-num { color: var(--orange); }
+    .s2 .station-num { color: var(--teal); }
+    .s3 .station-num { color: var(--brown-mid); }
+    .s4 .station-num { color: var(--green); }
+
+    .station-card-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--brown-dark);
+      line-height: 1.15;
+      letter-spacing: 0.03em;
+    }
+    .station-card-desc {
+      font-size: 13px;
+      color: var(--brown-muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .station-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 2px solid transparent;
+      letter-spacing: 0.03em;
+      width: 100%;
+      justify-content: center;
+    }
+    .s1 .station-cta { background: var(--orange);    color: #fff; border-color: var(--orange); }
+    .s2 .station-cta { background: var(--teal);      color: #fff; border-color: var(--teal); }
+    .s3 .station-cta { background: var(--brown-mid); color: #fff; border-color: var(--brown-mid); }
+    .s4 .station-cta { background: var(--green);     color: #fff; border-color: var(--green); }
+    .station-cta:hover { opacity: 0.88; transform: scale(1.02); }
+
+    /* Stats strip */
+    .stats-strip {
+      margin: 0 40px 32px;
+      background: var(--cream-light);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .stat-item {
+      padding: 20px;
+      text-align: center;
+      border-right: 1.5px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--orange);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brown-hint);
+      margin-top: 4px;
+    }
+
+    /* ============================================================
+       PHASE 3 — LESSON PAGE
+       ============================================================ */
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brown-muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .lesson-nav {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    /* Pizza interactive */
+    .pizza-interactive {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding: 16px 0;
+    }
+    .pizza-wrap {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .pizza-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.15s;
+    }
+    .pizza-wrap:hover img { transform: scale(1.05); }
+    .pizza-click-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--orange);
+      text-align: center;
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+    .pizza-fraction-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .pizza-eaten-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brown-muted);
+    }
+    .pizza-frac {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .pizza-frac-num {
+      font-family: var(--font-display);
+      font-size: 52px;
+      color: var(--orange);
+      line-height: 1;
+    }
+    .pizza-frac-line {
+      height: 4px;
+      width: 48px;
+      background: var(--brown-dark);
+      border-radius: 2px;
+      margin: 6px 0;
+    }
+    .pizza-frac-den {
+      font-family: var(--font-display);
+      font-size: 52px;
+      color: var(--teal);
+      line-height: 1;
+    }
+    .pizza-frac-note {
+      font-size: 13px;
+      color: var(--brown-muted);
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* Fraction anatomy display */
+    .frac-anatomy {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      padding: 20px 0;
+      flex-wrap: wrap;
+    }
+    .frac-anatomy-display {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .anat-num {
+      font-family: var(--font-display);
+      font-size: 72px;
+      color: var(--red);
+      line-height: 1;
+    }
+    .anat-line {
+      height: 5px;
+      width: 60px;
+      background: var(--brown-dark);
+      border-radius: 3px;
+      margin: 8px 0;
+    }
+    .anat-den {
+      font-family: var(--font-display);
+      font-size: 72px;
+      color: var(--teal);
+      line-height: 1;
+    }
+    .anat-labels {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .anat-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .anat-arrow {
+      font-size: 16px;
+    }
+    .anat-label-name {
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    .anat-label-desc {
+      font-weight: 400;
+      color: var(--brown-muted);
+      font-style: italic;
+      font-size: 12px;
+    }
+
+    /* Quiz */
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .quiz-option {
+      padding: 14px 18px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--cream-light);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--brown-dark);
+      transition: all 0.15s;
+      text-align: left;
+      letter-spacing: 0.02em;
+    }
+    .quiz-option:hover { background: var(--cream-mid); border-color: var(--brown-muted); }
+    .quiz-option.correct { background: var(--green-pale); border-color: var(--green); color: var(--green); }
+    .quiz-option.wrong   { background: var(--red-pale);   border-color: var(--red);   color: var(--red); }
+
+    /* ============================================================
+       PHASE 3 — SIMPLIFY PAGE (transplanted from fraction_simplifier.html)
+       ============================================================ */
+
+    /* Input */
+    .simp-input-row {
+      display: flex; align-items: center; gap: 20px;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .simp-frac-input {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .simp-frac-input input {
+      width: 90px; height: 64px; text-align: center;
+      font-family: var(--font-display); font-size: 2rem;
+      background: var(--cream); border: 2px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--brown-dark);
+      outline: none; transition: border-color 0.2s;
+      -moz-appearance: textfield;
+    }
+    .simp-frac-input input::-webkit-outer-spin-button,
+    .simp-frac-input input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .simp-frac-input input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(201,106,31,0.2); }
+    .simp-frac-line { width: 90px; height: 3px; background: var(--brown-dark); border-radius: 2px; }
+    .simp-frac-label { font-size: 11px; color: var(--brown-hint); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+    .simp-error { text-align:center; color:var(--red); font-weight:700; font-size:14px; margin-top:10px; min-height:20px; }
+    .simp-banner { background: var(--green-pale); border: 1.5px solid var(--green); border-radius: var(--radius); padding: 16px 20px; text-align: center; color: var(--green); font-family: var(--font-display); font-size: 18px; margin-bottom: 16px; }
+    .simp-fraction-display { display: flex; align-items: center; justify-content: center; gap: 32px; margin: 16px 0; flex-wrap: wrap; }
+    .simp-frac-block { text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .simp-frac-big { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .simp-frac-num { font-family: var(--font-display); font-size: 3rem; line-height: 1; }
+    .simp-frac-bar { width: 80px; height: 4px; border-radius: 2px; }
+    .simp-original .simp-frac-num  { color: var(--red); }
+    .simp-original .simp-frac-bar  { background: var(--red); }
+    .simp-simplified .simp-frac-num { color: var(--green); }
+    .simp-simplified .simp-frac-bar { background: var(--green); }
+    .simp-frac-sublabel { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; color: var(--brown-hint); }
+    .simp-check-text { font-size: 12px; color: var(--brown-muted); margin-top: 6px; text-align: center; line-height: 1.6; }
+    .simp-gcf-op-block { display: flex; flex-direction: column; align-items: center; gap: 10px; background: var(--orange-pale); border: 1.5px dashed var(--orange); border-radius: var(--radius); padding: 14px 20px; min-width: 150px; }
+    .simp-gcf-badge { font-family: var(--font-display); font-size: 14px; background: var(--orange); color: #fff; padding: 4px 14px; border-radius: 20px; }
+    .simp-gcf-arrows { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+    .simp-gcf-div-row { display: flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--font-display); font-size: 15px; }
+    .simp-gcf-div-sym { color: var(--orange); } .simp-gcf-eq { color: var(--brown-hint); } .simp-gcf-result { color: var(--green); }
+    .simp-gcf-div-line { height: 1px; background: var(--border); margin: 3px 0; }
+    .simp-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .simp-tab { padding: 8px 20px; border-radius: 20px; font-family: var(--font-body); font-size: 13px; font-weight: 700; cursor: pointer; border: 2px solid var(--border); background: transparent; color: var(--brown-muted); transition: all 0.2s; }
+    .simp-tab.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .simp-tab-panel { display: none; } .simp-tab-panel.active { display: block; }
+    .simp-steps-list { display: flex; flex-direction: column; gap: 12px; }
+    .simp-step { background: var(--cream); border-radius: var(--radius-sm); padding: 14px 18px; border-left: 4px solid var(--teal); opacity: 0; transform: translateX(-16px); animation: simp-slide-in 0.4s forwards; }
+    @keyframes simp-slide-in { to { opacity:1; transform:translateX(0); } }
+    .simp-step-num { font-size: 11px; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .simp-step-content { font-size: 14px; font-weight: 600; color: var(--brown-dark); line-height: 1.7; }
+    .simp-step-content .s-highlight { color: var(--orange); font-family: var(--font-display); }
+    .simp-step-content .s-op { color: var(--teal); } .simp-step-content .s-result { color: var(--green); font-family: var(--font-display); }
+    .simp-div-box { background: var(--cream-mid); border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .simp-div-frac { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .simp-div-num { font-family: var(--font-display); font-size: 1.5rem; }
+    .simp-div-bar { width: 48px; height: 2px; }
+    .simp-div-arrow { color: var(--orange); font-size: 1.4rem; }
+    .simp-div-step-label { font-size: 11px; color: var(--brown-hint); font-weight: 700; text-align: center; margin-top: 3px; }
+    .simp-euc-explainer { background: var(--teal-pale); border-left: 3px solid var(--teal); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 14px; font-size: 13px; font-weight: 600; color: var(--brown-dark); line-height: 1.6; }
+    .simp-euc-subhead { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brown-muted); margin-bottom: 8px; }
+    .simp-gcd-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border-light); font-weight: 700; font-size: 14px; }
+    .simp-gcd-row:last-child { border-bottom: none; }
+    .simp-gcd-row-final { background: var(--green-pale); border-radius: var(--radius-sm); padding: 8px; }
+    .simp-gcd-step-num { color: var(--brown-hint); min-width: 18px; padding-top: 2px; font-size: 12px; }
+    .simp-gcd-row-inner { display: flex; flex-direction: column; gap: 3px; }
+    .simp-gcd-equation { font-family: var(--font-display); font-size: 15px; color: var(--brown-dark); }
+    .simp-gcd-annotation { font-size: 12px; font-weight: 600; color: var(--brown-muted); line-height: 1.5; }
+    .simp-gcd-check { color: var(--green); } .simp-gcd-cross { color: var(--red); }
+    .simp-euc-conclusion { margin-top: 12px; padding: 12px 14px; background: var(--green-pale); border-radius: var(--radius-sm); border: 1px solid var(--green); font-size: 14px; font-weight: 700; line-height: 1.6; }
+    .simp-euc-why { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--brown-muted); font-style: italic; line-height: 1.6; }
+    .simp-visual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .simp-vis-card { background: var(--cream); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+    .simp-vis-title { font-family: var(--font-display); font-size: 16px; color: var(--teal); margin-bottom: 16px; }
+    .simp-vis-label { font-size: 11px; color: var(--brown-hint); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .simp-vis-pair { display: flex; justify-content: center; gap: 28px; align-items: center; flex-wrap: wrap; }
+    .simp-vis-item { text-align: center; }
+    canvas.simp-pie { border-radius: 50%; display: block; margin: 0 auto; }
+    .simp-pie-wrap { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: center; }
+    .simp-pie-unit { text-align: center; }
+    .simp-pie-whole-label { font-family: var(--font-display); font-size: 11px; color: var(--brown-hint); margin-top: 2px; }
+    .simp-bars-wrap { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+    .simp-bar-row-wrap { display: flex; align-items: center; gap: 8px; }
+    .simp-bar-whole-num { font-family: var(--font-display); font-size: 12px; color: var(--brown-hint); min-width: 16px; text-align: right; }
+    .simp-bar-container { display: flex; flex: 1; height: 44px; border-radius: var(--radius-sm); overflow: hidden; border: 2px solid var(--border); }
+    .simp-bar-segment { height: 100%; transition: width 0.5s ease; }
+    .simp-bar-segment.filled { background: var(--teal); }
+    .simp-bar-segment.empty  { background: var(--cream-mid); }
+    .simp-badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-top: 6px; }
+    .simp-badge-original   { background: var(--red-pale);  color: var(--red); }
+    .simp-badge-simplified { background: var(--green-pale); color: var(--green); }
+
+    .simplify-input-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      max-width: 180px;
+      margin: 0 auto;
+    }
+    .simplify-frac-line {
+      height: 4px;
+      width: 100%;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 4px 0;
+    }
+    .gcf-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .gcf-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--cream);
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      animation: step-in 0.3s ease;
+    }
+    @keyframes step-in {
+      from { opacity: 0; transform: translateX(-8px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .gcf-step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .gcf-step-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--brown-dark);
+    }
+    .factor-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .factor-chip {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 2px solid var(--border);
+      background: var(--cream-light);
+      color: var(--brown-mid);
+      transition: all 0.15s;
+    }
+    .factor-chip.common {
+      background: var(--orange-pale);
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+    .factor-chip.gcf {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+      transform: scale(1.08);
+    }
+    .result-fraction {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+      background: var(--green-pale);
+      border: 2px solid var(--green);
+      border-radius: var(--radius);
+      margin-top: 16px;
+    }
+    .result-fraction .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    /* ============================================================
+       PHASE 4 — OPERATIONS PAGE (transplanted from fraction_tool_v16.html)
+       ============================================================ */
+
+    /* v16 class names preserved exactly so JS references work */
+    .fp { font-family: var(--font-body); --dy-bg:#fdf8f0; --dy-bg2:#f5ede0; --dy-border:#c8b89a; --dy-text:#2c2214; --dy-muted:#6b5a45; --dy-hint:#9a8470; letter-spacing:.02em; line-height:1.6; }
+    .fp-row { display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; }
+    .fp-builder { flex:1; min-width:200px; background:var(--dy-bg); border:1.5px solid var(--dy-border); border-radius:10px; padding:14px; }
+    .fp-blabel-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .fp-blabel { font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+    .fp-clr { font-size:12px; font-weight:700; padding:4px 12px; border-radius:6px; border:1.5px solid var(--dy-border); background:var(--dy-bg2); color:var(--dy-muted); cursor:pointer; font-family:var(--font-body); }
+    .fp-clr:hover { background:var(--dy-border); }
+    .fp-ctrl { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .fp-ctrl label { font-size:12px; font-weight:700; color:var(--dy-muted); width:110px; flex-shrink:0; letter-spacing:.03em; }
+    .fp-ctrl-val { font-size:16px; font-weight:700; min-width:32px; text-align:center; color:var(--dy-text); background:var(--dy-bg2); border:1.5px solid var(--dy-border); border-radius:5px; padding:2px 6px; }
+    .fp-slider-wrap { flex:1; display:flex; flex-direction:column; justify-content:center; }
+    input[type=range].dy-slider { -webkit-appearance:none; appearance:none; width:100%; height:10px; border-radius:5px; background:var(--dy-bg2); border:1.5px solid var(--dy-border); outline:none; cursor:pointer; }
+    input[type=range].dy-slider::-webkit-slider-thumb { -webkit-appearance:none; width:28px; height:28px; border-radius:50%; background:#fff; border:3px solid var(--dy-border); cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.18); transition:border-color .15s,transform .1s; }
+    input[type=range].dy-slider::-moz-range-thumb { width:28px; height:28px; border-radius:50%; background:#fff; border:3px solid var(--dy-border); cursor:pointer; }
+    input[type=range].dy-slider:hover::-webkit-slider-thumb { border-color:var(--dy-text); transform:scale(1.12); }
+    .fp-numerator-hint { font-size:12px; font-weight:700; color:#5a7a3a; background:#edf7e4; border:1.5px dashed #8ab85a; border-radius:6px; padding:6px 10px; margin-bottom:8px; text-align:center; }
+    .fp-rects { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+    .fp-row-rect { display:flex; border:2px solid var(--dy-border); border-radius:5px; overflow:hidden; height:48px; background:var(--dy-bg); }
+    .fp-cell { flex:1; cursor:pointer; transition:background .07s; min-width:4px; border-right:1px solid var(--dy-border); }
+    .fp-cell:last-child { border-right:none; }
+    .fp-cell:hover { opacity:.75; }
+    .fp-fracval { text-align:left; margin-top:8px; min-height:58px; padding:4px 0; }
+    .fp-frac { display:inline-flex; flex-direction:column; align-items:center; font-size:24px; font-weight:700; line-height:1.2; font-family:var(--font-body); }
+    .fp-fline { height:3px; margin:4px 0; min-width:24px; border-radius:2px; }
+    .fp-opcol { display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:42px; gap:7px; }
+    .fp-opbtn { width:46px; height:46px; border-radius:8px; border:2px solid var(--dy-border); background:var(--dy-bg); font-size:22px; font-weight:700; cursor:pointer; color:var(--dy-muted); display:flex; align-items:center; justify-content:center; transition:all .12s; font-family:var(--font-body); }
+    .fp-opbtn:hover { background:var(--dy-bg2); }
+    .fp-opbtn.active { color:#fff; border-color:transparent; }
+    .fp-solverow { display:flex; justify-content:center; margin-top:1.5rem; }
+    .fp-solvebtn { padding:11px 40px; border-radius:8px; border:2px solid var(--dy-border); background:var(--dy-bg); font-size:16px; font-weight:700; cursor:pointer; color:var(--dy-text); font-family:var(--font-body); letter-spacing:.04em; transition:background .1s; }
+    .fp-solvebtn:hover { background:var(--dy-bg2); }
+    .fp-solvebtn:disabled { opacity:.35; cursor:not-allowed; }
+    .fp-result { margin-top:1.5rem; padding-top:1.5rem; border-top:2px solid var(--dy-border); display:flex; flex-direction:column; align-items:center; }
+    .fp-legend { display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; justify-content:center; }
+    .fp-litem { display:flex; align-items:center; gap:7px; font-size:13px; font-weight:700; color:var(--dy-muted); }
+    .fp-lswatch { width:16px; height:16px; border-radius:3px; flex-shrink:0; }
+    .fp-denom-status { margin-top:1rem; padding:12px 16px; border-radius:8px; font-size:13px; line-height:1.8; border-left:4px solid #BA7517; background:#fef3e2; color:var(--dy-text); }
+    .fp-guide-step { margin-top:.75rem; padding:12px 16px; border-radius:8px; font-size:13px; line-height:1.9; background:#eef4fd; border-left:4px solid #378ADD; color:var(--dy-text); }
+    .fp-match { margin-top:.75rem; padding:12px 16px; border-radius:8px; font-size:13px; line-height:1.9; background:#edf7f1; border-left:4px solid #639922; color:var(--dy-text); }
+    .dv-frac { display:inline-flex; flex-direction:column; align-items:center; font-size:20px; font-weight:700; line-height:1.2; vertical-align:middle; }
+    .dv-fline { height:3px; margin:4px 0; min-width:22px; border-radius:2px; }
+    .dv-equation { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:1.25rem; font-size:20px; font-weight:700; color:var(--dy-text); justify-content:center; }
+    .dv-row { width:100%; display:flex; flex-direction:column; align-items:center; margin-bottom:16px; }
+    .dv-rowlabel { font-size:12px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; margin-bottom:8px; text-align:center; color:var(--dy-muted); }
+    .dv-bar-wrap { display:flex; justify-content:center; width:100%; }
+    .res-rects { display:flex; flex-direction:column; gap:6px; }
+    .res-rect-row { display:flex; border:2px solid var(--dy-border); border-radius:5px; overflow:hidden; height:48px; }
+    .fp-hint { font-size:11px; color:var(--dy-hint); margin-top:3px; min-height:16px; }
+    .div-result-box { margin-top:10px; text-align:center; }
+    .div-simplified { font-size:13px; color:var(--dy-hint); margin-top:6px; }
+    .div-simplified span { font-weight:700; color:var(--dy-muted); }
+    .fp-frac-type { display:inline-flex; align-items:center; gap:6px; margin-top:7px; padding:5px 11px; border-radius:20px; font-size:12px; font-weight:700; letter-spacing:.04em; border:1.5px solid; }
+    .fp-frac-type.proper   { background:#edf7f1; color:#3a7a50; border-color:#7dbb96; }
+    .fp-frac-type.improper { background:#fef3e2; color:#8a5000; border-color:#e0a040; }
+    .fp-frac-type.whole    { background:#eef4fd; color:#2a5fa0; border-color:#7aaee0; }
+    .fp-frac-type.zero     { background:#f5f0eb; color:#9a8470; border-color:#c8b89a; }
+    .fp-frac-type-def { font-size:11px; font-weight:400; opacity:.85; }
+    .fp-sign-toggle { display:flex; border:1.5px solid var(--dy-border); border-radius:6px; overflow:hidden; }
+    .fp-sign-btn { flex:1; padding:4px 10px; font-size:15px; font-weight:700; cursor:pointer; border:none; background:var(--dy-bg2); color:var(--dy-muted); font-family:var(--font-body); transition:background .1s,color .1s; }
+    .fp-sign-btn.active-pos { background:#378ADD; color:#fff; }
+    .fp-sign-btn.active-neg { background:#D85A30; color:#fff; }
+
+    /* ============================================================
+       PHASE 4 — CONVERT PAGE (transplanted from fraction-converter.html)
+       ============================================================ */
+
+    .cv-sections-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .cv-section-card {
+      background: var(--cream-light);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .cv-section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cv-section-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .cv-section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .cv-section-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 120px;
+    }
+    .cv-section-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cv-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      min-width: 0;
+    }
+    .cv-input-label {
+      font-size: 12px;
+      color: var(--brown-hint);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .cv-slider-number-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 0;
+    }
+    .cv-number-input {
+      width: 100%;
+      padding: 6px 8px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: var(--cream);
+      color: var(--brown-dark);
+      outline: none;
+      transition: border-color 0.15s;
+      min-width: 0;
+      -moz-appearance: textfield;
+    }
+    .cv-number-input::-webkit-outer-spin-button,
+    .cv-number-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .cv-number-input:focus { border-color: var(--orange); }
+    .cv-range-input {
+      width: 100%;
+      cursor: pointer;
+      min-width: 0;
+    }
+    .cv-frac-display {
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.1;
+    }
+    .cv-frac-bar {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: currentColor;
+      margin: 3px 0;
+    }
+    .cv-big-display {
+      font-size: 30px;
+      font-weight: 700;
+      text-align: center;
+      font-family: var(--font-display);
+    }
+    .cv-value-hint {
+      font-size: 11px;
+      color: var(--brown-hint);
+      text-align: center;
+    }
+    .cv-pies-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      align-items: center;
+    }
+    /* How They Connect cards */
+    .connect-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .connect-card {
+      background: var(--cream-light);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+    .connect-card-title {
+      font-size: 12px; font-weight: 700;
+      color: var(--brown-dark); margin-bottom: 6px;
+      letter-spacing: 0.04em;
+    }
+    .connect-card-title span { color: var(--orange); }
+    .connect-card-rule { font-size: 12px; color: var(--brown-muted); line-height: 1.5; margin-bottom: 8px; }
+    .connect-card-example { font-size: 13px; font-weight: 700; color: var(--brown-dark); font-family: var(--font-display); }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       GEAR WATERMARKS (fixed, visible on all pages)
+       ============================================================ -->
+  <!-- Corner gears -->
+  <div class="gear-watermark gear-tl"><img src="Gear.png" alt=""></div>
+  <div class="gear-watermark gear-br"><img src="Gear.png" alt=""></div>
+  <div class="gear-watermark gear-tr"><img src="Gear.png" alt=""></div>
+  <div class="gear-watermark gear-bl"><img src="Gear.png" alt=""></div>
+  <!-- Mid-page gears -->
+  <div class="gear-watermark gear-mid-r"><img src="Gear.png" alt=""></div>
+  <div class="gear-watermark gear-mid-l"><img src="Gear.png" alt=""></div>
+  <!-- Small accent gears -->
+  <div class="gear-watermark gear-sm-tr"><img src="Gear.png" alt=""></div>
+  <div class="gear-watermark gear-sm-bl"><img src="Gear.png" alt=""></div>
+  <div class="gear-watermark gear-sm-tl"><img src="Gear.png" alt=""></div>
+  <div class="gear-watermark gear-sm-br"><img src="Gear.png" alt=""></div>
+
+  <!-- ============================================================
+       LOADING SCREEN
+       ============================================================ -->
+  <div id="loading-screen">
+    <div class="loading-title-sm">Welcome to</div>
+    <div class="loading-title">MR. FRACTION'S <span>FACTORY</span></div>
+    <div class="loading-gif-wrap"><img src="Mr__Fraction_GIF.gif" alt="Mr. Fraction dancing" class="loading-gif"></div>
+    <div class="loading-status" id="loading-status">Warming up the machines...</div>
+    <div class="loading-bar-wrap">
+      <div class="loading-bar-fill" id="loading-bar"></div>
+    </div>
+    <div class="loading-dots">
+      <div class="loading-dot" id="dot0"></div>
+      <div class="loading-dot" id="dot1"></div>
+      <div class="loading-dot" id="dot2"></div>
+      <div class="loading-dot" id="dot3"></div>
+    </div>
+    <!-- Ticker inside loading too -->
+    <div class="ticker-wrap" style="position:absolute;bottom:0;left:0;right:0;">
+      <div class="ticker-track" id="loading-ticker"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       NAV BAR
+       ============================================================ -->
+  <nav class="nav-bar" id="main-nav" style="display:none;">
+    <div class="nav-logo" onclick="showPage('home')">
+      <img src="Mr__Fraction_Front.png" alt="Mr. Fraction">
+      <div class="nav-logo-text">
+        <span class="nav-logo-title">MR. FRACTION'S</span>
+        <span class="nav-logo-sub">Fraction Factory</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <button class="nav-btn active" id="nav-home" onclick="showPage('home')">
+        <span class="nav-icon">🏠</span> Home
+      </button>
+      <button class="nav-btn" id="nav-lesson" onclick="showPage('lesson')">
+        <span class="nav-icon">📖</span> Lesson
+      </button>
+      <button class="nav-btn" id="nav-simplify" onclick="showPage('simplify')">
+        <span class="nav-icon">✂️</span> Simplify
+      </button>
+      <button class="nav-btn" id="nav-operate" onclick="showPage('operate')">
+        <span class="nav-icon">⚙️</span> Operate
+      </button>
+      <button class="nav-btn" id="nav-convert" onclick="showPage('convert')">
+        <span class="nav-icon">🔄</span> Convert
+      </button>
+    </div>
+  </nav>
+
+  <!-- Ticker below nav (light version) -->
+  <div class="ticker-wrap light" id="main-ticker" style="display:none;">
+    <div class="ticker-track" id="main-ticker-track"></div>
+  </div>
+
+  <!-- ============================================================
+       PAGE: HOME
+       ============================================================ -->
+  <div class="page active" id="page-home">
+    <div class="home-hero">
+      <div class="home-hero-left" style="position:relative;">
+        <!-- Giant background gear behind the heading text -->
+        <img src="Gear.png" alt="" style="position:absolute;top:-60px;left:-80px;width:280px;height:280px;object-fit:contain;
+filter:opacity(0.10);animation:gear-spin 35s linear infinite reverse;pointer-events:none;z-index:0;">
+        <div style="position:relative;z-index:1;">
+        <div class="home-eyebrow">
+          <div class="home-eyebrow-line"></div>
+          Welcome to the
+        </div>
+        <div class="home-heading">FRACTION</div>
+        <span class="home-heading-accent">FACTORY</span>
+        <p class="home-intro">
+          Step inside! Mr. Fraction will guide you through everything
+          — from what fractions <em>are</em>, to simplifying, operating,
+          and converting them. Pick a station below to get started.
+        </p>
+        </div><!-- /z-index wrapper -->
+      </div>
+      <div class="home-hero-right" style="position:relative;padding:20px 30px 20px 20px;">
+        <!-- Decorative gears around Mr. Fraction -->
+        <div style="position:absolute;top:-35px;right:-25px;width:110px;height:110px;pointer-events:none;animation:gear-spin 10s linear infinite;"><img src="Gear.png" alt="" style="width:100%;height:100%;object-fit:contain;
+filter:opacity(0.22)"></div>
+        <div style="position:absolute;top:5px;left:-35px;width:80px;height:80px;pointer-events:none;animation:gear-spin 7s linear infinite reverse;"><img src="Gear.png" alt="" style="width:100%;height:100%;object-fit:contain;
+filter:opacity(0.18)"></div>
+        <div style="position:absolute;bottom:-10px;right:-30px;width:95px;height:95px;pointer-events:none;animation:gear-spin 13s linear infinite;"><img src="Gear.png" alt="" style="width:100%;height:100%;object-fit:contain;
+filter:opacity(0.20)"></div>
+        <div style="position:absolute;bottom:20px;left:-25px;width:65px;height:65px;pointer-events:none;animation:gear-spin 8s linear infinite reverse;"><img src="Gear.png" alt="" style="width:100%;height:100%;object-fit:contain;
+filter:opacity(0.15)"></div>
+        <div class="home-speech" style="animation: hero-float 3.5s ease-in-out infinite 0.4s;">Ready to make fractions? Let's go! 🏭</div>
+        <div class="home-hero-img-wrap"><img src="Mr__Fraction_Front.png" alt="Mr. Fraction" class="home-hero-img"></div>
+      </div>
+    </div>
+
+    <div class="stations-section">
+      <div class="stations-heading">Choose Your Station</div>
+      <div class="station-cards">
+
+        <div class="station-card s1" onclick="showPage('lesson')">
+          <img src="Mr__Fraction_Ladder.png" alt="Lesson" class="station-card-img">
+          <div class="station-num">Station 01</div>
+          <div class="station-card-title">What Are Fractions?</div>
+          <div class="station-card-desc">Discover what fractions are, why they matter, and how to read them. Interactive activities included!</div>
+          <button class="station-cta">Start Learning →</button>
+        </div>
+
+        <div class="station-card s2" onclick="showPage('simplify')">
+          <img src="Pie.png" alt="Simplify" class="station-card-img">
+          <div class="station-num">Station 02</div>
+          <div class="station-card-title">Simplify Fractions</div>
+          <div class="station-card-desc">Find the Greatest Common Factor and shrink fractions down to their simplest form, step by step.</div>
+          <button class="station-cta">Start Simplifying →</button>
+        </div>
+
+        <div class="station-card s3" onclick="showPage('operate')">
+          <img src="Gear.png" alt="Operate" class="station-card-img">
+          <div class="station-num">Station 03</div>
+          <div class="station-card-title">Fraction Operations</div>
+          <div class="station-card-desc">Add, subtract, multiply, and divide fractions with visual rectangle models showing exactly what's happening.</div>
+          <button class="station-cta">Start Operating →</button>
+        </div>
+
+        <div class="station-card s4" onclick="showPage('convert')">
+          <img src="Pizza.png" alt="Convert" class="station-card-img">
+          <div class="station-num">Station 04</div>
+          <div class="station-card-title">Convert Fractions</div>
+          <div class="station-card-desc">See how fractions, decimals, and percentages all describe the same amount — just in different ways.</div>
+          <button class="station-cta">Start Converting →</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="stats-strip">
+      <div class="stat-item">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Stations</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">∞</div>
+        <div class="stat-label">Fractions to Explore</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">1</div>
+        <div class="stat-label">Mr. Fraction</div>
+      </div>
+    </div>
+
+  </div><!-- /page-home -->
+
+  <!-- ============================================================
+       PAGE: LESSON
+       ============================================================ -->
+  <div class="page" id="page-lesson">
+    <div class="station-header">
+      <div class="station-header-left">
+        <img src="Mr__Fraction_Ladder.png" alt="" class="station-thumb">
+        <div class="station-meta">
+          <div class="station-label">Station 01 — Interactive Lesson</div>
+          <div class="station-title">What Are Fractions?</div>
+          <div class="station-desc">Work through each step — click, explore, and answer questions as you go.</div>
+        </div>
+      </div>
+      <button class="back-btn" onclick="showPage('home')">← Back</button>
+    </div>
+
+    <div class="content-area">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="lesson-progress" style="width:12.5%"></div>
+      </div>
+      <div class="step-indicator" id="lesson-step-label">Step 1 of 8</div>
+
+      <!-- Steps injected by JS -->
+      <div id="lesson-steps-container"></div>
+
+      <div class="lesson-nav">
+        <button class="btn btn-orange" id="lesson-next-btn" onclick="lessonNext()">Next Step →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE: SIMPLIFY
+       ============================================================ -->
+  <div class="page" id="page-simplify">
+    <div class="station-header">
+      <div class="station-header-left">
+        <img src="Pie.png" alt="" class="station-thumb">
+        <div class="station-meta">
+          <div class="station-label">Station 02 — Simplifier</div>
+          <div class="station-title">Simplify Fractions</div>
+          <div class="station-desc">Find the GCF and reduce any fraction to its simplest form.</div>
+        </div>
+      </div>
+      <button class="back-btn" onclick="showPage('home')">← Back</button>
+    </div>
+    <div class="content-area">
+
+      <!-- INPUT CARD -->
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">📥</span> Enter Your Fraction</div>
+        <div class="simp-input-row">
+          <div class="simp-frac-input">
+            <span class="simp-frac-label">Numerator</span>
+            <input type="number" id="simp-numerator" placeholder="12" min="1" max="999">
+            <div class="simp-frac-line"></div>
+            <input type="number" id="simp-denominator" placeholder="18" min="1" max="999">
+            <span class="simp-frac-label">Denominator</span>
+          </div>
+        </div>
+        <div class="simp-error" id="simp-error"></div>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+          <button class="btn btn-teal" onclick="simpRun()">🔍 Simplify It!</button>
+          <button class="btn btn-outline" onclick="simpRandom()">🎲 Random Fraction</button>
+        </div>
+      </div>
+
+      <!-- RESULTS (hidden until run) -->
+      <div id="simp-results" style="display:none;">
+
+        <!-- Already simplified banner -->
+        <div id="simp-already-banner" class="simp-banner" style="display:none;">
+          ✅ This fraction is already in its simplest form!
+        </div>
+
+        <!-- Before / After -->
+        <div class="card">
+          <div class="card-title"><span class="card-title-icon">🎯</span> Result</div>
+          <div class="simp-fraction-display">
+            <div class="simp-frac-block simp-original">
+              <div class="simp-frac-big">
+                <span class="simp-frac-num" id="simp-res-num-orig"></span>
+                <div class="simp-frac-bar"></div>
+                <span class="simp-frac-num" id="simp-res-den-orig"></span>
+              </div>
+              <div class="simp-frac-sublabel">Original</div>
+            </div>
+            <div id="simp-arrow-big" style="display:none;">
+              <div class="simp-gcf-op-block" id="simp-gcf-op-block">
+                <div class="simp-gcf-badge">GCF = <span id="simp-gcf-value"></span></div>
+                <div class="simp-gcf-arrows">
+                  <div class="simp-gcf-div-row">
+                    <span id="simp-gcf-num-orig"></span>
+                    <span class="simp-gcf-div-sym">÷</span>
+                    <span id="simp-gcf-val-top"></span>
+                    <span class="simp-gcf-eq">=</span>
+                    <span id="simp-gcf-num-simp" class="simp-gcf-result"></span>
+                  </div>
+                  <div class="simp-gcf-div-line"></div>
+                  <div class="simp-gcf-div-row">
+                    <span id="simp-gcf-den-orig"></span>
+                    <span class="simp-gcf-div-sym">÷</span>
+                    <span id="simp-gcf-val-bot"></span>
+                    <span class="simp-gcf-eq">=</span>
+                    <span id="simp-gcf-den-simp" class="simp-gcf-result"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="simp-frac-block simp-simplified" id="simp-simplified-block" style="display:none;">
+              <div class="simp-frac-big">
+                <span class="simp-frac-num" id="simp-res-num-simp"></span>
+                <div class="simp-frac-bar"></div>
+                <span class="simp-frac-num" id="simp-res-den-simp"></span>
+              </div>
+              <div class="simp-frac-sublabel">Simplified</div>
+              <div class="simp-check-text" id="simp-check-text"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs: Steps + Visuals -->
+        <div class="card">
+          <div class="simp-tabs">
+            <button class="simp-tab active" onclick="simpSwitchTab('steps',this)">📐 Step-by-Step</button>
+            <button class="simp-tab" onclick="simpSwitchTab('visual',this)">🎨 Visual Demo</button>
+          </div>
+          <div class="simp-tab-panel active" id="simp-tab-steps">
+            <div class="simp-steps-list" id="simp-steps-list"></div>
+          </div>
+          <div class="simp-tab-panel" id="simp-tab-visual">
+            <div class="simp-visual-grid">
+              <div class="simp-vis-card">
+                <div class="simp-vis-title">🥧 Circle Model</div>
+                <div class="simp-vis-pair">
+                  <div class="simp-vis-item">
+                    <div class="simp-vis-label">Original</div>
+                    <div id="simp-pie-orig-wrap" class="simp-pie-wrap"></div>
+                    <div id="simp-badge-pie-orig" class="simp-badge simp-badge-original"></div>
+                  </div>
+                  <div class="simp-vis-item">
+                    <div class="simp-vis-label">Simplified</div>
+                    <div id="simp-pie-simp-wrap" class="simp-pie-wrap"></div>
+                    <div id="simp-badge-pie-simp" class="simp-badge simp-badge-simplified"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="simp-vis-card">
+                <div class="simp-vis-title">📊 Bar Model</div>
+                <div style="display:flex;flex-direction:column;gap:20px;">
+                  <div>
+                    <div class="simp-vis-label" style="text-align:left">Original</div>
+                    <div id="simp-bar-orig-wrap" class="simp-bars-wrap"></div>
+                    <div id="simp-badge-bar-orig" class="simp-badge simp-badge-original" style="display:block;text-align:left;margin-top:6px;width:fit-content;"></div>
+                  </div>
+                  <div>
+                    <div class="simp-vis-label" style="text-align:left">Simplified</div>
+                    <div id="simp-bar-simp-wrap" class="simp-bars-wrap"></div>
+                    <div id="simp-badge-bar-simp" class="simp-badge simp-badge-simplified" style="display:block;text-align:left;margin-top:6px;width:fit-content;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /simp-results -->
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE: OPERATE
+       ============================================================ -->
+  <div class="page" id="page-operate">
+    <div class="station-header">
+      <div class="station-header-left">
+        <img src="Gear.png" alt="" class="station-thumb">
+        <div class="station-meta">
+          <div class="station-label">Station 03 — Operations</div>
+          <div class="station-title">Fraction Operations</div>
+          <div class="station-desc">Build fractions with sliders, pick an operation, and see the result visually.</div>
+        </div>
+      </div>
+      <button class="back-btn" onclick="showPage('home')">← Back</button>
+    </div>
+    <div class="content-area">
+      <div class="card">
+        <div class="fp">
+          <div class="fp-row">
+            <div class="fp-builder" id="bA"></div>
+            <div class="fp-opcol">
+              <button class="fp-opbtn active" id="op+" style="background:#378ADD;color:#fff;border-color:transparent;">+</button>
+              <button class="fp-opbtn" id="op-">−</button>
+              <button class="fp-opbtn" id="op×">×</button>
+              <button class="fp-opbtn" id="op÷">÷</button>
+            </div>
+            <div class="fp-builder" id="bB"></div>
+          </div>
+          <div id="denomGuide"></div>
+          <div class="fp-solverow">
+            <button class="fp-solvebtn" id="solveBtn">Solve ⚙️</button>
+          </div>
+          <div id="resultArea"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE: CONVERT
+       ============================================================ -->
+  <div class="page" id="page-convert">
+    <div class="station-header">
+      <div class="station-header-left">
+        <img src="Pizza.png" alt="" class="station-thumb">
+        <div class="station-meta">
+          <div class="station-label">Station 04 — Converter</div>
+          <div class="station-title">Convert Fractions</div>
+          <div class="station-desc">Change any value and watch the others update instantly.</div>
+        </div>
+      </div>
+      <button class="back-btn" onclick="showPage('home')">← Back</button>
+    </div>
+    <div class="content-area">
+
+      <!-- Three-column explorer -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+          <div class="card-title" style="margin-bottom:0;"><span class="card-title-icon">🔄</span> Change any value — they all update together!</div>
+          <button id="cv-reset-btn" onclick="cvResetAll()" style="font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--orange);background:var(--orange-pale);border:1.5px solid var(--orange);border-radius:var(--radius-sm);padding:6px 14px;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='var(--orange-light);this.style.color=\'#fff\''" onmouseout="this.style.background='var(--orange-pale)';this.style.color='var(--orange)'">↺ Reset</button>
+        </div>
+
+        <div class="cv-sections-grid">
+
+          <!-- FRACTIONS -->
+          <div class="cv-section-card">
+            <div class="cv-section-header">
+              <div class="cv-section-dot" style="background:#378ADD;"></div>
+              <span class="cv-section-label" style="color:#185FA5;">Fractions</span>
+            </div>
+            <div class="cv-section-visual">
+              <div class="cv-pies-row" id="cv-pie-container"></div>
+            </div>
+            <div class="cv-section-inputs">
+              <div class="cv-input-row">
+                <span class="cv-input-label">Top (↑)</span>
+                <input type="number" class="cv-number-input" id="cv-numer" min="1" max="99" value="3">
+              </div>
+              <div class="cv-input-row">
+                <span class="cv-input-label">Bottom (↓)</span>
+                <input type="number" class="cv-number-input" id="cv-denom" min="1" max="99" value="4">
+              </div>
+              <div class="cv-frac-display" style="color:#185FA5;">
+                <span id="cv-fl-num">3</span>
+                <span class="cv-frac-bar"></span>
+                <span id="cv-fl-den">4</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DECIMALS -->
+          <div class="cv-section-card">
+            <div class="cv-section-header">
+              <div class="cv-section-dot" style="background:#1D9E75;"></div>
+              <span class="cv-section-label" style="color:#0F6E56;">Decimals</span>
+            </div>
+            <div class="cv-section-visual" style="flex-direction:column;gap:8px;width:100%;">
+              <svg id="cv-numline-svg" width="100%" viewBox="0 0 220 80" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <div class="cv-section-inputs">
+              <div class="cv-input-row">
+                <span class="cv-input-label">Value</span>
+                <div class="cv-slider-number-group">
+                  <input type="range" class="cv-range-input" id="cv-dec-slider" min="0" max="1000" step="1" value="75" style="accent-color:#1D9E75;">
+                  <input type="number" class="cv-number-input" id="cv-dec-input" min="0" max="10" step="0.01" value="0.75">
+                </div>
+              </div>
+              <div class="cv-big-display" style="color:#0F6E56;" id="cv-dec-label">0.75</div>
+              <div class="cv-value-hint">between 0 and 10</div>
+            </div>
+          </div>
+
+          <!-- PERCENTAGES -->
+          <div class="cv-section-card">
+            <div class="cv-section-header">
+              <div class="cv-section-dot" style="background:#D85A30;"></div>
+              <span class="cv-section-label" style="color:#993C1D;">Percentages</span>
+            </div>
+            <div class="cv-section-visual" style="width:100%;padding:0 4px;">
+              <svg id="cv-pct-svg" width="100%" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <div class="cv-section-inputs">
+              <div class="cv-input-row">
+                <span class="cv-input-label">Percent</span>
+                <div class="cv-slider-number-group">
+                  <input type="range" class="cv-range-input" id="cv-pct-slider" min="0" max="1000" step="1" value="750" style="accent-color:#D85A30;">
+                  <input type="number" class="cv-number-input" id="cv-pct-input" min="0" step="0.1" value="75">
+                </div>
+              </div>
+              <div class="cv-big-display" style="color:#993C1D;" id="cv-pct-label">75%</div>
+              <div class="cv-value-hint">out of 100%</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- How They Connect -->
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">💡</span> How They Connect</div>
+        <div class="connect-cards">
+          <div class="connect-card">
+            <div class="connect-card-title"><span>Fraction</span> → Decimal</div>
+            <div class="connect-card-rule">Divide the top by the bottom.</div>
+            <div class="connect-card-example" id="cv-cc-fd">3 ÷ 4 = 0.75</div>
+          </div>
+          <div class="connect-card">
+            <div class="connect-card-title"><span>Decimal</span> → Percent</div>
+            <div class="connect-card-rule">Multiply by 100.</div>
+            <div class="connect-card-example" id="cv-cc-dp">0.75 × 100 = 75%</div>
+          </div>
+          <div class="connect-card">
+            <div class="connect-card-title"><span>Percent</span> → Fraction</div>
+            <div class="connect-card-rule">Write over 100 and simplify.</div>
+            <div class="connect-card-example" id="cv-cc-pf">75/100 = 3/4</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Shared footer (hidden on loading, shown on all pages) -->
+  <div class="site-footer" id="site-footer" style="display:none;">
+    Mr. Fraction's Factory · Made for curious minds · Have fun with fractions! 🏭
+  </div>
+
+  <!-- ============================================================
+       MR. FRACTION COMPANION
+       ============================================================ -->
+  <div class="mr-companion hidden" id="mr-companion">
+    <div class="mr-speech-bubble" id="mr-speech"></div>
+    <img src="Mr__Fraction_Front.png" alt="Mr. Fraction" class="mr-figure" id="mr-figure">
+  </div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>
+  (function(){
+
+    /* ---- TICKER CONTENT ---- */
+    const TICKER_ITEMS = [
+      'FRACTIONS','3/4','SIMPLIFY','5/6','OPERATE','2/3',
+      'CONVERT','7/10','DISCOVER','1/2','PATTERNS','4/9',
+      'EXPLORE','1/3','LEARN','6/8','MATHS','3/5'
+    ];
+
+    function buildTicker(trackEl) {
+      const full = [...TICKER_ITEMS, ...TICKER_ITEMS];
+      trackEl.innerHTML = full.map((t,i) =>
+        `<span class="ticker-item">${t}${i<full.length-1?'<span class="ticker-dot"></span>':''}</span>`
+      ).join('');
+    }
+    buildTicker(document.getElementById('loading-ticker'));
+    buildTicker(document.getElementById('main-ticker-track'));
+
+    /* ---- LOADING SEQUENCE ---- */
+    const LOAD_MSGS = [
+      'Warming up the machines...',
+      'Mixing numerators and denominators...',
+      'Stacking fractions on the conveyor...',
+      'Almost ready — Mr. Fraction is putting on his glasses...'
+    ];
+    const bar    = document.getElementById('loading-bar');
+    const status = document.getElementById('loading-status');
+    const dots   = [0,1,2,3].map(i => document.getElementById('dot'+i));
+    let loadStep = 0;
+
+    function loadTick() {
+      loadStep++;
+      const pct = loadStep * 25;
+      bar.style.width = pct + '%';
+      status.textContent = LOAD_MSGS[loadStep-1] || LOAD_MSGS[3];
+      dots.forEach((d,i) => {
+        d.classList.toggle('active', i === loadStep-1);
+        d.classList.toggle('done', i < loadStep-1);
+      });
+      if (loadStep < 4) {
+        setTimeout(loadTick, 700);
+      } else {
+        setTimeout(finishLoad, 600);
+      }
+    }
+    setTimeout(loadTick, 500);
+
+    function finishLoad() {
+      const ls = document.getElementById('loading-screen');
+      ls.style.transition = 'opacity 0.5s';
+      ls.style.opacity = '0';
+      setTimeout(() => {
+        ls.style.display = 'none';
+        document.getElementById('main-nav').style.display = 'flex';
+        document.getElementById('main-ticker').style.display = 'block';
+        document.getElementById('site-footer').style.display = 'block';
+        document.getElementById('mr-companion').classList.add('hidden');
+      }, 500);
+    }
+
+    /* ---- PAGE NAVIGATION ---- */
+    const PAGES = ['home','lesson','simplify','operate','convert'];
+
+    window.showPage = function(id) {
+      PAGES.forEach(p => {
+        document.getElementById('page-'+p).classList.toggle('active', p===id);
+        const nb = document.getElementById('nav-'+p);
+        if (nb) nb.classList.toggle('active', p===id);
+      });
+      // Mr. Fraction companion: hide on home, show on others
+      const comp = document.getElementById('mr-companion');
+      if (id === 'home') {
+        comp.classList.add('hidden');
+      } else {
+        comp.classList.remove('hidden');
+        setCompanion(id);
+      }
+      window.scrollTo(0,0);
+    };
+
+    /* ---- MR. FRACTION COMPANION ---- */
+    const MR_POSES = {
+      lesson:   'Mr__Fraction_Ladder.png',
+      simplify: 'Mr__Fraction_Left_Side.png',
+      operate:  'Mr__Fraction_Front.png',
+      convert:  'Mr__Fraction_Right_Side.png'
+    };
+
+    // Dialogue pools — Phase 5 will expand these
+    const MR_DIALOGUE = {
+      lesson: [
+        "Let's learn about fractions together! 📘",
+        "Click the pizza to eat a slice — watch the fraction change!",
+        "The bottom number tells you how many equal pieces the whole was cut into.",
+        "The top number is your pieces. The bottom is the whole. Together — a fraction!"
+      ],
+      simplify: [
+        "Type in a fraction and I'll walk you through it!",
+        "We're not making it smaller — we're making it clearer.",
+        "The GCF is the biggest number that fits into BOTH. Find it, divide both, done!",
+        "12/18 and 2/3 are the same slice of pie — just described differently."
+      ],
+      operate: [
+        "Pro tip: to add or subtract, denominators must match first!",
+        "Look at the bars — bigger bar means bigger fraction, even if the number looks small.",
+        "When you multiply, you're taking a fraction OF a fraction. Smaller, not bigger!",
+        "Division flips the second fraction. Why? Because dividing by ½ is the same as multiplying by 2."
+      ],
+      convert: [
+        "Change any value and watch the others update instantly!",
+        "0.75, 75%, and 3/4 are three different costumes for the same number.",
+        "To go fraction → decimal: just divide top by bottom.",
+        "Percent just means 'out of 100'. So 75% = 75/100 = 3/4. Same thing!"
+      ]
+    };
+
+    let mrTimers = {};
+    function setCompanion(page) {
+      const fig    = document.getElementById('mr-figure');
+      const speech = document.getElementById('mr-speech');
+      fig.src = MR_POSES[page] || 'Mr__Fraction_Front.png';
+      const lines = MR_DIALOGUE[page] || [];
+      let idx = 0;
+      clearInterval(mrTimers.rotate);
+      speech.textContent = lines[0] || '';
+      mrTimers.rotate = setInterval(() => {
+        idx = (idx + 1) % lines.length;
+        speech.style.animation = 'none';
+        void speech.offsetWidth;
+        speech.style.animation = 'bubble-in 0.3s ease';
+        speech.textContent = lines[idx];
+      }, 6000);
+    }
+
+    /* ---- LESSON ENGINE ---- */
+    let lessonStep = 0;
+    let pizzaSlices = 0;
+    const PIZZA_MAX = 8;
+
+    const LESSON_STEPS = [
+      // Step 1: What is a fraction?
+      {
+        render() {
+          return `
+          <div class="card">
+            <div class="card-title"><span class="card-title-icon">🍕</span> What is a Fraction?</div>
+            <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
+              <img src="Mr__Fraction_Left_Side.png" alt="Mr. Fraction" style="width:72px;height:72px;object-fit:contain;
+flex-shrink:0;">
+              <div>
+                <p style="font-size:15px;line-height:1.7;">
+                  A <strong style="color:var(--orange)">fraction</strong> tells us about a
+                  <strong style="color:var(--teal)">part of something whole.</strong>
+                </p>
+                <p style="font-size:15px;line-height:1.7;margin-top:8px;">
+                  Imagine you have a pizza cut into <strong>8 equal slices</strong>.
+                  If you eat <strong>1 slice</strong>, you've eaten
+                  <strong style="color:var(--orange)">one-eighth</strong> of the pizza.
+                  We write that as a fraction: <strong style="color:var(--orange);font-size:18px;">1/8</strong>
+                </p>
+                <p style="font-size:15px;line-height:1.7;margin-top:8px;">
+                  Click on the pizza below to eat slices and see the fraction change!
+                </p>
+              </div>
+            </div>
+
+            <div class="pizza-interactive" style="margin-top:20px;">
+              <div>
+                <div class="pizza-wrap" onclick="pizzaClick()" id="pizza-img-wrap">
+                  <img src="Pizza.png" alt="Pizza" id="pizza-img">
+                </div>
+                <div class="pizza-click-label">👆 Click to eat a slice!</div>
+              </div>
+              <div class="pizza-fraction-display">
+                <div class="pizza-eaten-label">Slices eaten:</div>
+                <div class="pizza-frac">
+                  <div class="pizza-frac-num" id="pizza-num">0</div>
+                  <div class="pizza-frac-line"></div>
+                  <div class="pizza-frac-den">8</div>
+                </div>
+                <div class="pizza-frac-note" id="pizza-note">None eaten yet!</div>
+              </div>
+            </div>
+          </div>`;
+        }
+      },
+      // Step 2: Numerator & Denominator
+      {
+        render() {
+          return `
+          <div class="card">
+            <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:16px;">
+              <img src="Mr__Fraction_Right_Side.png" alt="" style="width:72px;height:72px;object-fit:contain;
+flex-shrink:0;">
+              <div>
+                <p style="font-size:15px;line-height:1.7;">
+                  Every fraction has two parts. Let's use
+                  <strong style="color:var(--orange);font-size:17px;">3/4</strong> as an example.
+                </p>
+                <p style="font-size:15px;line-height:1.7;margin-top:6px;">
+                  The number <strong>on top</strong> is the
+                  <strong style="color:var(--red)">Numerator</strong>
+                  — it tells you <em>how many parts you have.</em>
+                </p>
+                <p style="font-size:15px;line-height:1.7;margin-top:6px;">
+                  The number <strong>on the bottom</strong> is the
+                  <strong style="color:var(--teal)">Denominator</strong>
+                  — it tells you <em>how many equal parts the whole is cut into.</em>
+                </p>
+              </div>
+            </div>
+
+            <div class="frac-anatomy">
+              <div class="frac-anatomy-display">
+                <div class="anat-num">3</div>
+                <div class="anat-line"></div>
+                <div class="anat-den">4</div>
+              </div>
+              <div class="anat-labels">
+                <div class="anat-label" style="color:var(--red)">
+                  <span class="anat-arrow">←</span>
+                  <div>
+                    <div class="anat-label-name">Numerator</div>
+                    <div class="anat-label-desc">How many parts you have</div>
+                  </div>
+                </div>
+                <div class="anat-label" style="color:var(--teal)">
+                  <span class="anat-arrow">←</span>
+                  <div>
+                    <div class="anat-label-name">Denominator</div>
+                    <div class="anat-label-desc">Total equal parts</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="callout callout-orange">
+              🏭 <strong>Factory tip:</strong> Think of the denominator as the <em>mould size</em>
+              — it decides how many equal pieces you cut your material into.
+              The numerator is how many pieces you take.
+            </div>
+          </div>`;
+        }
+      },
+      // Step 3: Types of fractions
+      {
+        render() {
+          return `
+          <div class="card">
+            <div class="card-title"><span class="card-title-icon">📦</span> Types of Fractions</div>
+            <p style="font-size:15px;line-height:1.7;margin-bottom:16px;">
+              Not all fractions look the same. Here are the three main types:
+            </p>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+              <div style="background:var(--cream);border:2px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;">
+                <div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:8px;">Proper</div>
+                <div style="font-family:var(--font-display);font-size:40px;color:var(--red);">3</div>
+                <div style="height:3px;width:40px;background:var(--brown-dark);margin:6px auto;"></div>
+                <div style="font-family:var(--font-display);font-size:40px;color:var(--teal);">4</div>
+                <div style="font-size:12px;color:var(--brown-muted);margin-top:8px;">Top &lt; Bottom<br>Less than 1 whole</div>
+              </div>
+              <div style="background:var(--cream);border:2px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;">
+                <div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Improper</div>
+                <div style="font-family:var(--font-display);font-size:40px;color:var(--blue);">7</div>
+                <div style="height:3px;width:40px;background:var(--brown-dark);margin:6px auto;"></div>
+                <div style="font-family:var(--font-display);font-size:40px;color:var(--teal);">4</div>
+                <div style="font-size:12px;color:var(--brown-muted);margin-top:8px;">Top &gt; Bottom<br>More than 1 whole</div>
+              </div>
+              <div style="background:var(--cream);border:2px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;">
+                <div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px;">Mixed Number</div>
+                <div style="font-family:var(--font-display);font-size:40px;color:var(--green);">1 ¾</div>
+                <div style="font-size:12px;color:var(--brown-muted);margin-top:32px;">Whole number<br>+ proper fraction</div>
+              </div>
+            </div>
+
+            <div class="card-title"><span class="card-title-icon">✏️</span> Quick Check</div>
+            <p style="font-size:15px;margin-bottom:8px;">Which of these is an <strong>improper fraction</strong>?</p>
+            <div class="quiz-options">
+              <button class="quiz-option" onclick="quizAnswer(this,'wrong')">2/5</button>
+              <button class="quiz-option" onclick="quizAnswer(this,'correct')">9/4</button>
+              <button class="quiz-option" onclick="quizAnswer(this,'wrong')">1/10</button>
+            </div>
+            <div id="quiz-feedback" style="margin-top:12px;font-size:14px;font-weight:700;color:var(--green);display:none;"></div>
+          </div>`;
+        }
+      },
+      // Step 4: Equivalent fractions
+      {
+        render() {
+          function segBar(n, d) {
+            let cells = '';
+            for (let i = 0; i < d; i++) {
+              const filled = i < n;
+              const border = i < d - 1 ? 'border-right:2px solid var(--cream-mid);' : '';
+              cells += `<div style="flex:1;height:100%;background:${filled ? 'var(--orange)' : 'var(--border-light)'};${border}"></div>`;
+            }
+            return `<div style="display:flex;height:20px;border:2px solid var(--border);border-radius:4px;overflow:hidden;width:120px;">${cells}</div>`;
+          }
+          return `
+          <div class="card">
+            <div class="card-title"><span class="card-title-icon">⚖️</span> Equivalent Fractions</div>
+            <p style="font-size:15px;line-height:1.7;margin-bottom:16px;">
+              Two fractions are <strong style="color:var(--orange)">equivalent</strong> when they represent
+              the same amount — even though they look different.
+            </p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;padding:20px 0;">
+              ${[['1','2'],['2','4'],['3','6'],['4','8']].map(([n,d]) => `
+                <div style="text-align:center;">
+                  <div style="font-family:var(--font-display);font-size:36px;color:var(--orange);">${n}</div>
+                  <div style="height:3px;width:36px;background:var(--brown-dark);margin:5px auto;"></div>
+                  <div style="font-family:var(--font-display);font-size:36px;color:var(--teal);">${d}</div>
+                  <div style="margin-top:10px;display:flex;justify-content:center;">${segBar(parseInt(n), parseInt(d))}</div>
+                  <div style="font-size:11px;color:var(--brown-muted);margin-top:4px;">${n} of ${d} equal parts</div>
+                </div>
+              `).join('<span style="font-family:var(--font-display);font-size:28px;color:var(--border);align-self:center;margin-top:-20px;">=</span>')}
+            </div>
+            <div class="callout callout-teal" style="margin-top:8px;">
+              🔍 <strong>Notice:</strong> The orange sections always fill exactly half — even though the number of segments changes!
+              1/2 has 2 cuts, 2/4 has 4 cuts, 3/6 has 6 cuts, 4/8 has 8 cuts — but the filled amount is identical.
+            </div>
+          </div>`;
+        }
+      },
+      // Step 5: Comparing fractions
+      {
+        render() {
+          return `
+          <div class="card">
+            <div class="card-title"><span class="card-title-icon">📏</span> Comparing Fractions</div>
+            <p style="font-size:15px;line-height:1.7;margin-bottom:16px;">
+              How do you know which fraction is bigger? The easiest way: make the
+              <strong style="color:var(--teal)">denominators the same</strong>, then compare the numerators.
+            </p>
+            <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;padding:12px 0;">
+              ${[['1','3','33'],['2','5','40'],['3','4','75']].map(([n,d,pct]) => `
+                <div style="flex:1;min-width:120px;">
+                  <div style="text-align:center;margin-bottom:8px;">
+                    <span style="font-family:var(--font-display);font-size:32px;color:var(--orange);">${n}</span>
+                    <span style="font-family:var(--font-display);font-size:24px;color:var(--brown-hint);margin:0 4px;">/</span>
+                    <span style="font-family:var(--font-display);font-size:32px;color:var(--teal);">${d}</span>
+                  </div>
+                  <div style="background:var(--border-light);border-radius:4px;height:24px;overflow:hidden;">
+                    <div style="height:100%;width:${pct}%;background:var(--orange);border-radius:4px;transition:width 0.6s;"></div>
+                  </div>
+                  <div style="text-align:center;font-size:12px;color:var(--brown-muted);margin-top:4px;">${pct}% of the whole</div>
+                </div>
+              `).join('<div style="font-family:var(--font-display);font-size:24px;color:var(--border);flex-shrink:0;">&lt;</div>')}
+            </div>
+            <div class="callout callout-orange" style="margin-top:12px;">
+              🏭 <strong>Factory rule:</strong> 1/3 &lt; 2/5 &lt; 3/4 — look at the bars!
+              The longer the bar, the bigger the fraction.
+            </div>
+          </div>`;
+        }
+      },
+      // Step 6: Fractions on a number line
+      {
+        render() {
+          // Build one clickable segmented line
+          function segLine(id, divisions, hex, lineLabel, fracLabels) {
+            let segs = '';
+            for (let i = 0; i < divisions; i++) {
+              const frac = fracLabels[i + 1] || '';
+              segs += `<div
+                id="seg-${id}-${i}"
+                onclick="step6ClickSeg('${id}',${i},${divisions},'${hex}')"
+                title="Click to fill up to ${frac}"
+                style="flex:1;height:36px;background:var(--cream-mid);border-right:${i < divisions - 1 ? `2px solid var(--cream)` : 'none'};cursor:pointer;transition:background 0.15s;border-radius:${i===0?'4px 0 0 4px':i===divisions-1?'0 4px 4px 0':'0'};"
+                onmouseover="this.style.opacity='0.75'"
+                onmouseout="this.style.opacity='1'">
+              </div>`;
+            }
+            // Tick labels below
+            let ticks = '';
+            for (let i = 0; i <= divisions; i++) {
+              const pct = (i / divisions) * 100;
+              ticks += `<div style="position:absolute;left:${pct}%;transform:translateX(-50%);text-align:center;">
+                <div style="font-family:var(--font-display);font-size:11px;color:${i===0||i===divisions?'var(--brown-muted)':hex};white-space:nowrap;margin-top:3px;">${fracLabels[i]}</div>
+              </div>`;
+            }
+            return `
+              <div id="line-${id}" style="margin-bottom:20px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                  <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${hex};min-width:58px;text-align:right;flex-shrink:0;">${lineLabel}</div>
+                  <div style="display:flex;flex:1;border:2px solid ${hex};border-radius:4px;overflow:hidden;" id="bar-${id}">${segs}</div>
+                  <div style="font-size:12px;font-weight:700;color:${hex};min-width:40px;" id="label-${id}">0/${divisions}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="min-width:58px;"></div>
+                  <div style="position:relative;flex:1;height:16px;">${ticks}</div>
+                </div>
+              </div>`;
+          }
+
+          return `
+          <div class="card">
+            <div class="card-title"><span class="card-title-icon">📐</span> Fractions on a Number Line</div>
+            <p style="font-size:15px;line-height:1.7;margin-bottom:8px;">
+              <strong>Click any segment</strong> to fill up to that point. Compare how much each line is filled — when two lines show the same amount, those fractions are equivalent!
+            </p>
+            <p style="font-size:13px;color:var(--brown-muted);margin-bottom:20px;">Toggle a line on/off with the buttons below.</p>
+
+            <!-- Toggle buttons -->
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
+              ${[
+                ['halves',   'Halves',   '#c96a1f'],
+                ['thirds',   'Thirds',   '#2e7a6e'],
+                ['quarters', 'Quarters', '#2a5fa0'],
+                ['fifths',   'Fifths',   '#4a7c2f'],
+              ].map(([id, label, hex]) => `
+                <button id="toggle-${id}" onclick="step6Toggle('${id}','${hex}')"
+                  data-active="true" data-color="${hex}"
+                  style="padding:8px 18px;border-radius:20px;border:2px solid ${hex};background:${hex};color:#fff;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;">
+                  ${label}
+                </button>
+              `).join('')}
+              <button onclick="step6ResetAll()"
+                style="padding:8px 18px;border-radius:20px;border:2px solid var(--border);background:var(--cream-mid);color:var(--brown-muted);font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-left:4px;">
+                ↺ Reset
+              </button>
+            </div>
+
+            <!-- Segmented lines -->
+            <div id="step6-lines">
+              ${segLine('halves',   2, '#c96a1f', 'Halves',   ['0','1/2','1'])}
+              ${segLine('thirds',   3, '#2e7a6e', 'Thirds',   ['0','1/3','2/3','1'])}
+              ${segLine('quarters', 4, '#2a5fa0', 'Quarters', ['0','1/4','1/2','3/4','1'])}
+              ${segLine('fifths',   5, '#4a7c2f', 'Fifths',   ['0','1/5','2/5','3/5','4/5','1'])}
+            </div>
+
+            <div id="step6-hint" style="min-height:44px;margin-top:4px;"></div>
+
+            <div class="callout callout-orange" style="margin-top:12px;">
+              🏭 <strong>Factory challenge:</strong> Fill Halves to 1/2, then fill Quarters to the same amount.
+              How many quarters equal one half? Now try matching Thirds with Fifths — can you?
+            </div>
+          </div>`;
+        }
+      },
+      // Step 7: Fractions in real life
+      {
+        render() {
+          return `
+          <div class="card">
+            <div class="card-title"><span class="card-title-icon">🌍</span> Fractions in Real Life</div>
+            <p style="font-size:15px;line-height:1.7;margin-bottom:16px;">
+              Fractions, decimals, and percentages are <strong>three ways to say the same thing</strong>.
+              Here's how they show up in everyday life:
+            </p>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              ${[
+                ['🍕','Eating Pizza',       '3/8',  '0.375', '37.5%',  'You ate 3 out of 8 slices of pizza.'],
+                ['⏰','Telling Time',        '1/4',  '0.25',  '25%',    '15 minutes is one quarter of an hour.'],
+                ['💰','Sales & Discounts',  '1/2',  '0.5',   '50%',    'Half off means you only pay half the price.'],
+                ['🏃','Sports',             '2/3',  '0.667', '66.7%',  'A runner completed two thirds of the race.'],
+                ['🍳','Cooking',            '3/4',  '0.75',  '75%',    'Three quarter cups of flour in the recipe.'],
+                ['📏','Measuring',          '1/2',  '0.5',   '50%',    'Half a foot on a measuring tape.'],
+              ].map(([icon, title, frac, dec, pct, desc]) => {
+                const [n, d] = frac.split('/').map(Number);
+                const fillPct = (n / d) * 100;
+                return `
+                <div style="background:var(--cream);border:1.5px solid var(--border-light);border-radius:var(--radius-sm);padding:14px 16px;">
+                  <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+                    <div style="font-size:28px;flex-shrink:0;line-height:1;margin-top:2px;">${icon}</div>
+                    <div style="flex:1;min-width:200px;">
+                      <div style="font-size:14px;font-weight:700;color:var(--brown-dark);margin-bottom:2px;">${title}</div>
+                      <div style="font-size:13px;color:var(--brown-muted);margin-bottom:10px;">${desc}</div>
+                      <!-- Bar visual -->
+                      <div style="height:14px;background:var(--border-light);border-radius:4px;overflow:hidden;margin-bottom:6px;">
+                        <div style="height:100%;width:${fillPct}%;background:var(--orange);border-radius:4px;transition:width 0.4s;"></div>
+                      </div>
+                      <!-- Trinity badges -->
+                      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <span style="padding:3px 10px;border-radius:12px;background:var(--orange-pale);border:1.5px solid var(--orange);font-size:12px;font-weight:700;color:var(--orange);">
+                          Fraction: ${frac}
+                        </span>
+                        <span style="padding:3px 10px;border-radius:12px;background:var(--teal-pale);border:1.5px solid var(--teal);font-size:12px;font-weight:700;color:var(--teal);">
+                          Decimal: ${dec}
+                        </span>
+                        <span style="padding:3px 10px;border-radius:12px;background:var(--green-pale);border:1.5px solid var(--green);font-size:12px;font-weight:700;color:var(--green);">
+                          Percent: ${pct}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
+              }).join('')}
+            </div>
+            <div class="callout callout-teal" style="margin-top:16px;">
+              💡 <strong>Big idea:</strong> The fraction, decimal, and percentage badges on each card all describe the <em>same amount</em> — just written three different ways.
+              Head to <strong>Station 04</strong> to explore how to convert between them!
+            </div>
+          </div>`;
+        }
+      },
+      // Step 8: Summary & next steps
+      {
+        render() {
+          return `
+          <div class="card" style="text-align:center;">
+            <img src="Mr__Fraction_Front.png" alt="Mr. Fraction" style="width:120px;height:120px;object-fit:contain;
+margin-bottom:12px;">
+            <div style="font-family:var(--font-display);font-size:28px;color:var(--brown-dark);margin-bottom:8px;">You Did It! 🎉</div>
+            <p style="font-size:15px;line-height:1.7;color:var(--brown-mid);max-width:440px;margin:0 auto 20px;">
+              You now know what fractions are, how to read them, and where they live
+              in the world. Ready to go deeper? Head to one of the next stations!
+            </p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+              <button class="btn btn-teal" onclick="showPage('simplify')">✂️ Simplify Fractions</button>
+              <button class="btn btn-orange" onclick="showPage('operate')">⚙️ Operate Fractions</button>
+              <button class="btn btn-green" onclick="showPage('convert')">🔄 Convert Fractions</button>
+            </div>
+          </div>`;
+        }
+      }
+    ];
+
+    function renderLessonStep() {
+      const container = document.getElementById('lesson-steps-container');
+      container.innerHTML = LESSON_STEPS[lessonStep].render();
+      const pct = ((lessonStep+1)/LESSON_STEPS.length)*100;
+      document.getElementById('lesson-progress').style.width = pct+'%';
+      document.getElementById('lesson-step-label').textContent =
+        `Step ${lessonStep+1} of ${LESSON_STEPS.length}`;
+      const nextBtn = document.getElementById('lesson-next-btn');
+      if (lessonStep >= LESSON_STEPS.length-1) {
+        nextBtn.textContent = 'Start Over ↺';
+      } else {
+        nextBtn.textContent = 'Next Step →';
+      }
+      // Update Mr. Fraction dialogue for lesson context
+      updateLessonDialogue();
+    }
+
+    const LESSON_DIALOGUE = [
+      "Let's learn about fractions together! 📘",
+      "The denominator is the mould. The numerator is what you take!",
+      "Improper means the top is bigger than the bottom. More than one whole!",
+      "Same value, different look — that's equivalent fractions.",
+      "Bigger denominator doesn't always mean bigger fraction. Compare carefully!",
+      "Between 0 and 1 — that's where proper fractions live.",
+      "You see fractions every single day, even when you don't notice!",
+      "You've completed the lesson! You're a fraction expert. 🎉"
+    ];
+
+    function updateLessonDialogue() {
+      const speech = document.getElementById('mr-speech');
+      const fig    = document.getElementById('mr-figure');
+      const poses  = [
+        'Mr__Fraction_Ladder.png','Mr__Fraction_Right_Side.png',
+        'Mr__Fraction_Left_Side.png','Mr__Fraction_Back.png',
+        'Mr__Fraction_Ladder.png','Mr__Fraction_Left_Side.png',
+        'Mr__Fraction_Right_Side.png','Mr__Fraction_Front.png'
+      ];
+      fig.src = poses[lessonStep] || 'Mr__Fraction_Front.png';
+      speech.textContent = LESSON_DIALOGUE[lessonStep] || '';
+    }
+
+    window.lessonNext = function() {
+      lessonStep = (lessonStep + 1) % LESSON_STEPS.length;
+      renderLessonStep();
+    };
+
+    window.pizzaClick = function() {
+      if (pizzaSlices < PIZZA_MAX) pizzaSlices++;
+      document.getElementById('pizza-num').textContent = pizzaSlices;
+      const notes = [
+        'None eaten yet!','Just one slice!','Getting hungry!','Half of half!',
+        'Half the pizza!','More than half!','Just 2 left!','Only 1 left!',
+        'The whole pizza! 🎉'
+      ];
+      document.getElementById('pizza-note').textContent = notes[pizzaSlices] || '';
+      if (pizzaSlices >= PIZZA_MAX) {
+        document.getElementById('pizza-img').style.opacity = '0.3';
+      }
+    };
+
+    window.quizAnswer = function(btn, type) {
+      document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+      btn.classList.add(type);
+      const fb = document.getElementById('quiz-feedback');
+      fb.style.display = 'block';
+      if (type === 'correct') {
+        fb.style.color = 'var(--green)';
+        fb.textContent = '✅ Correct! 9/4 is improper because the top (9) is bigger than the bottom (4).';
+      } else {
+        fb.style.color = 'var(--red)';
+        fb.textContent = '❌ Not quite. Remember: improper means the numerator is bigger than the denominator!';
+        document.querySelectorAll('.quiz-option')[1].classList.add('correct');
+      }
+    };
+
+    /* ---- SIMPLIFY ENGINE (transplanted from fraction_simplifier.html) ---- */
+    function simpGcd(a,b){return b===0?a:simpGcd(b,a%b);}
+    function simpEuclideanSteps(a,b){
+      const steps=[];let x=a,y=b;
+      while(y!==0){steps.push({a:x,b:y,q:Math.floor(x/y),r:x%y});let t=y;y=x%y;x=t;}
+      return{gcdVal:x,steps};
+    }
+
+    window.simpRandom = function(){
+      const denoms=[4,6,8,9,10,12,15,16,18,20,24,30];
+      const den=denoms[Math.floor(Math.random()*denoms.length)];
+      const factors=[];for(let i=1;i<=den;i++)if(den%i===0)factors.push(i);
+      const factor=factors[Math.floor(Math.random()*(factors.length-1))+1];
+      const maxN=Math.floor(den/factor);
+      const nPart=Math.floor(Math.random()*(maxN-1))+1;
+      document.getElementById('simp-numerator').value=nPart*factor;
+      document.getElementById('simp-denominator').value=den;
+      simpRun();
+    };
+
+    window.simpRun = function(){
+      const errEl=document.getElementById('simp-error');
+      errEl.textContent='';
+      const num=parseInt(document.getElementById('simp-numerator').value);
+      const den=parseInt(document.getElementById('simp-denominator').value);
+      if(!num||!den||isNaN(num)||isNaN(den)){errEl.textContent='⚠️ Please enter both a numerator and denominator.';return;}
+      if(num<=0||den<=0){errEl.textContent='⚠️ Both numbers must be positive!';return;}
+
+      const{gcdVal,steps:eucSteps}=simpEuclideanSteps(num,den);
+      const simpNum=num/gcdVal, simpDen=den/gcdVal;
+      const alreadySimple=gcdVal===1;
+
+      document.getElementById('simp-results').style.display='block';
+      document.getElementById('simp-already-banner').style.display=alreadySimple?'block':'none';
+      document.getElementById('simp-arrow-big').style.display=alreadySimple?'none':'flex';
+      document.getElementById('simp-simplified-block').style.display=alreadySimple?'none':'flex';
+
+      document.getElementById('simp-res-num-orig').textContent=num;
+      document.getElementById('simp-res-den-orig').textContent=den;
+      document.getElementById('simp-res-num-simp').textContent=simpNum;
+      document.getElementById('simp-res-den-simp').textContent=simpDen;
+      document.getElementById('simp-gcf-value').textContent=gcdVal;
+      document.getElementById('simp-gcf-val-top').textContent=gcdVal;
+      document.getElementById('simp-gcf-val-bot').textContent=gcdVal;
+      document.getElementById('simp-gcf-num-orig').textContent=num;
+      document.getElementById('simp-gcf-den-orig').textContent=den;
+      document.getElementById('simp-gcf-num-simp').textContent=simpNum;
+      document.getElementById('simp-gcf-den-simp').textContent=simpDen;
+      document.getElementById('simp-check-text').innerHTML=
+        `${simpNum} × ${gcdVal} = ${num}<br>${simpDen} × ${gcdVal} = ${den}`;
+
+      simpBuildSteps(num,den,gcdVal,simpNum,simpDen,eucSteps,alreadySimple);
+      simpBuildVisuals(num,den,simpNum,simpDen);
+
+      // Mr. Fraction dialogue
+      const speech=document.getElementById('mr-speech');
+      if(alreadySimple){
+        speech.textContent=`${num}/${den} is already as simple as it gets! The GCF is 1, so nothing cancels.`;
+      } else {
+        speech.textContent=`GCF of ${num} and ${den} is ${gcdVal}. Divide both by ${gcdVal} → ${simpNum}/${simpDen}. Same value, cleaner look!`;
+      }
+
+      setTimeout(()=>document.getElementById('simp-results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+    };
+
+    function simpBuildSteps(num,den,gcdVal,simpNum,simpDen,eucSteps,alreadySimple){
+      const list=document.getElementById('simp-steps-list');
+      list.innerHTML='';
+      const addStep=(n,title,html,delay)=>{
+        const s=document.createElement('div');
+        s.className='simp-step';
+        s.style.animationDelay=`${delay}s`;
+        s.innerHTML=`<div class="simp-step-num">Step ${n} · ${title}</div><div class="simp-step-content">${html}</div>`;
+        list.appendChild(s);
+      };
+
+      addStep(1,'Identify the Fraction',`
+        We want to simplify <span class="s-highlight">${num}/${den}</span>.
+        To do this, we find the <span class="s-op">Greatest Common Divisor (GCD)</span> —
+        the biggest number that divides evenly into <em>both</em> the numerator and denominator.
+      `,0.1);
+
+      let eucHtml=`
+        <div class="simp-euc-explainer">
+          <strong>The Euclidean Algorithm</strong> is an ancient method for finding the GCD.
+          Key insight: <span class="s-op">GCD(a, b) = GCD(b, a mod b)</span>.
+          We keep substituting until the remainder hits <span class="s-highlight">0</span> — that last non-zero remainder is the GCD.
+        </div>
+        <div class="simp-euc-subhead">Finding GCD(${num}, ${den}):</div>`;
+      eucSteps.forEach((s,i)=>{
+        const isLast=s.r===0;
+        const ann=i===0
+          ?`Divide ${s.a} by ${s.b}: quotient ${s.q}, remainder <span class="s-highlight">${s.r}</span>`
+          :`Now divide ${s.a} by ${s.b}: quotient ${s.q}, remainder <span class="s-highlight">${s.r}</span>`;
+        eucHtml+=`<div class="simp-gcd-row${isLast?' simp-gcd-row-final':''}">
+          <span class="simp-gcd-step-num">${i+1}.</span>
+          <div class="simp-gcd-row-inner">
+            <span class="simp-gcd-equation">${s.a} = ${s.b} × ${s.q} + <span class="s-highlight">${s.r}</span></span>
+            <span class="simp-gcd-annotation">${ann}${isLast
+              ?` — <span class="simp-gcd-check">remainder is 0, so GCD = <strong>${s.b}</strong></span>`
+              :` — <span class="simp-gcd-cross">not zero, keep going: GCD(${s.a},${s.b}) = GCD(${s.b},${s.r})</span>`
+            }</span>
+          </div>
+        </div>`;
+      });
+      eucHtml+=`<div class="simp-euc-conclusion">
+        🎯 <strong>GCD = <span class="s-result">${gcdVal}</span></strong> — the last non-zero remainder.
+        <span class="simp-euc-why">Any remainder <em>r</em> in a = b×q + r shares all the same divisors as a and b, so the GCD is preserved at every step.</span>
+      </div>`;
+      addStep(2,'Find the GCD via Euclidean Algorithm',eucHtml,0.3);
+
+      addStep(3,'Verify the GCD',`Does <span class="s-highlight">${gcdVal}</span> divide evenly into both?<br><br>
+        <div class="simp-gcd-row"><span class="simp-gcd-check">✓</span> ${num} ÷ ${gcdVal} = <span class="s-result">${simpNum}</span></div>
+        <div class="simp-gcd-row"><span class="simp-gcd-check">✓</span> ${den} ÷ ${gcdVal} = <span class="s-result">${simpDen}</span></div>
+      `,0.5);
+
+      if(!alreadySimple){
+        addStep(4,'Divide Both Parts',`Divide <em>both</em> by <span class="s-highlight">${gcdVal}</span>:
+          <div class="simp-div-box">
+            <div class="simp-div-frac">
+              <span class="simp-div-num" style="color:var(--red)">${num}</span>
+              <div class="simp-div-bar" style="background:var(--red)"></div>
+              <span class="simp-div-num" style="color:var(--red)">${den}</span>
+              <div class="simp-div-step-label">Original</div>
+            </div>
+            <span class="simp-div-arrow">÷ ${gcdVal} →</span>
+            <div class="simp-div-frac">
+              <span class="simp-div-num" style="color:var(--orange)">${num} ÷ ${gcdVal} = ${simpNum}</span>
+              <div class="simp-div-bar" style="background:var(--orange)"></div>
+              <span class="simp-div-num" style="color:var(--orange)">${den} ÷ ${gcdVal} = ${simpDen}</span>
+              <div class="simp-div-step-label">After Dividing</div>
+            </div>
+            <span class="simp-div-arrow">=</span>
+            <div class="simp-div-frac">
+              <span class="simp-div-num" style="color:var(--green)">${simpNum}</span>
+              <div class="simp-div-bar" style="background:var(--green)"></div>
+              <span class="simp-div-num" style="color:var(--green)">${simpDen}</span>
+              <div class="simp-div-step-label">Simplified ✓</div>
+            </div>
+          </div>
+        `,0.7);
+        addStep(5,'Final Answer',`
+          <span class="s-highlight">${num}/${den}</span> simplified is
+          <span class="s-result" style="font-size:1.3rem"> ${simpNum}/${simpDen}</span> 🎉<br>
+          <small style="color:var(--brown-muted)">Check: ${simpNum} × ${gcdVal} = ${num} | ${simpDen} × ${gcdVal} = ${den}</small>
+        `,0.9);
+      } else {
+        addStep(4,'Already Simplified!',`
+          The GCD is <span class="s-highlight">1</span> — no number greater than 1 divides into both
+          <span class="s-highlight">${num}</span> and <span class="s-highlight">${den}</span>.<br><br>
+          ✅ <strong>${num}/${den}</strong> is already in its <span class="s-result">simplest form</span>!
+        `,0.7);
+      }
+    }
+
+    function simpBuildVisuals(num,den,simpNum,simpDen){
+      simpDrawPies('simp-pie-orig-wrap',num,den,'#c96a1f','#ede0cc');
+      simpDrawPies('simp-pie-simp-wrap',simpNum,simpDen,'#4a7c2f','#ede0cc');
+      document.getElementById('simp-badge-pie-orig').textContent=`${num}/${den}`;
+      document.getElementById('simp-badge-pie-simp').textContent=`${simpNum}/${simpDen}`;
+      simpDrawBars('simp-bar-orig-wrap',num,den,'#2e7a6e');
+      simpDrawBars('simp-bar-simp-wrap',simpNum,simpDen,'#4a7c2f');
+      document.getElementById('simp-badge-bar-orig').textContent=`${num}/${den}`;
+      document.getElementById('simp-badge-bar-simp').textContent=`${simpNum}/${simpDen}`;
+    }
+
+    function simpDrawPies(wrapId,n,d,fillColor,emptyColor){
+      const wrap=document.getElementById(wrapId);
+      wrap.innerHTML='';
+      const wholes=Math.floor(n/d), remainder=n%d;
+      const total=wholes+(remainder>0?1:0)||1;
+      const size=total<=3?130:total<=6?90:70;
+      for(let w=0;w<wholes;w++){
+        const unit=document.createElement('div'); unit.className='simp-pie-unit';
+        const canvas=document.createElement('canvas'); canvas.width=size; canvas.height=size; canvas.className='simp-pie';
+        const lbl=document.createElement('div'); lbl.className='simp-pie-whole-label'; lbl.textContent=`${d}/${d}`;
+        unit.appendChild(canvas); unit.appendChild(lbl); wrap.appendChild(unit);
+        simpDrawSinglePie(canvas,d,d,fillColor,emptyColor);
+      }
+      if(remainder>0){
+        const unit=document.createElement('div'); unit.className='simp-pie-unit';
+        const canvas=document.createElement('canvas'); canvas.width=size; canvas.height=size; canvas.className='simp-pie';
+        const lbl=document.createElement('div'); lbl.className='simp-pie-whole-label'; lbl.textContent=`${remainder}/${d}`;
+        unit.appendChild(canvas); unit.appendChild(lbl); wrap.appendChild(unit);
+        simpDrawSinglePie(canvas,remainder,d,fillColor,emptyColor);
+      }
+      if(wholes===0&&remainder===0){
+        const unit=document.createElement('div'); unit.className='simp-pie-unit';
+        const canvas=document.createElement('canvas'); canvas.width=130; canvas.height=130; canvas.className='simp-pie';
+        unit.appendChild(canvas); wrap.appendChild(unit);
+        simpDrawSinglePie(canvas,0,d,fillColor,emptyColor);
+      }
+    }
+
+    function simpDrawSinglePie(canvas,n,d,fillColor,emptyColor){
+      const ctx=canvas.getContext('2d');
+      const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2,r=Math.min(w,h)/2-4;
+      ctx.clearRect(0,0,w,h);
+      const sliceAngle=(2*Math.PI)/d;
+      for(let i=0;i<d;i++){
+        const start=-Math.PI/2+i*sliceAngle, end=start+sliceAngle;
+        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,end); ctx.closePath();
+        ctx.fillStyle=i<n?fillColor:emptyColor; ctx.fill();
+        ctx.strokeStyle='#c8b89a'; ctx.lineWidth=2; ctx.stroke();
+      }
+    }
+
+    function simpDrawBars(wrapId,n,d,fillColor){
+      const wrap=document.getElementById(wrapId); wrap.innerHTML='';
+      const wholes=Math.floor(n/d), remainder=n%d;
+      if(wholes===0){ wrap.appendChild(simpMakeBarRow(n,d,fillColor,null)); }
+      else {
+        for(let w=0;w<wholes;w++) wrap.appendChild(simpMakeBarRow(d,d,fillColor,w+1));
+        if(remainder>0) wrap.appendChild(simpMakeBarRow(remainder,d,fillColor,wholes+1));
+      }
+    }
+
+    function simpMakeBarRow(filled,total,fillColor,rowNum){
+      const rowWrap=document.createElement('div'); rowWrap.className='simp-bar-row-wrap';
+      if(rowNum!==null){
+        const num=document.createElement('div'); num.className='simp-bar-whole-num'; num.textContent=rowNum; rowWrap.appendChild(num);
+      }
+      const container=document.createElement('div'); container.className='simp-bar-container';
+      for(let i=0;i<total;i++){
+        const seg=document.createElement('div');
+        seg.className='simp-bar-segment '+(i<filled?'filled':'empty');
+        seg.style.width=`${100/total}%`;
+        if(i<filled) seg.style.background=fillColor;
+        if(i<total-1) seg.style.borderRight='2px solid var(--border)';
+        container.appendChild(seg);
+      }
+      rowWrap.appendChild(container); return rowWrap;
+    }
+
+    window.simpSwitchTab = function(name,el){
+      document.querySelectorAll('.simp-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.simp-tab-panel').forEach(p=>p.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('simp-tab-'+name).classList.add('active');
+    };
+
+    // Enter key support
+    ['simp-numerator','simp-denominator'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.addEventListener('keydown',e=>{ if(e.key==='Enter') simpRun(); });
+    });
+
+    /* ---- OPERATIONS ENGINE (transplanted from fraction_tool_v16.html) ---- */
+    (function(){
+      const CA='#378ADD', CB='#D85A30', CR='#639922', CO='#BA7517';
+      const OP_COLORS={'+':CA,'-':CB,'×':CO,'÷':'#9F77DD'};
+      const GROUP_PAL=[CB,'#9F3A6A',CR,CO,'#533AB7','#1D9E75'];
+      const BG='#fdf8f0';
+
+      function gcd(a,b){return b===0?a:gcd(b,a%b);}
+      function lcm(a,b){return(a*b)/gcd(a,b);}
+      function simplify(n,d){if(n===0)return[0,1];const g=gcd(Math.abs(n),Math.abs(d));return[n/g,d/g];}
+
+      const SA={rects:1,cuts:4,selectedCount:0,sign:1};
+      const SB={rects:1,cuts:3,selectedCount:0,sign:1};
+      let activeOp='+';
+      let denomMismatchSeen=false;
+
+      function totalCells(s){return s.rects*s.cuts;}
+      function ppr(s){return s.cuts;}
+      function getFrac(s){
+        const den=ppr(s),num=s.selectedCount*(s.sign||1);
+        const[sn,sd]=simplify(num,den);
+        return{n:sn,d:sd,rawN:num,ppr:den,rects:s.rects,totalCells:totalCells(s),sign:s.sign||1};
+      }
+
+      function updateSliderFill(el,color){
+        const min=parseInt(el.min)||0,max=parseInt(el.max)||1,val=parseInt(el.value)||0;
+        const pct=((val-min)/(max-min))*100;
+        el.style.background=`linear-gradient(to right,${color} ${pct}%,#f5ede0 ${pct}%)`;
+      }
+
+      function negPrefix(rawN,color){
+        return rawN<0?`<span style="font-size:28px;font-weight:700;color:${color};margin-right:2px;">−</span>`:'';
+      }
+
+      function renderFracHTML(rawN,p,color){
+        const absN=Math.abs(rawN);
+        const pfx=negPrefix(rawN,color);
+        if(absN===0)return`<span style="font-size:24px;font-weight:700;color:#9a8470;">0</span>`;
+        if(absN%p===0)return`<div style="display:inline-flex;align-items:center;">${pfx}<span style="font-size:28px;font-weight:700;color:${color};">${absN/p}</span></div>`;
+        const[fn,fd]=simplify(absN,p);
+        const lwI=Math.max(28,Math.max(String(fn).length,String(fd).length)*14);
+        if(fn<fd){
+          return`<div style="display:inline-flex;align-items:center;">${pfx}<span class="fp-frac" style="color:${color};"><span>${fn}</span><span class="fp-fline" style="width:${lwI}px;background:${color};"></span><span>${fd}</span></span></div>`;
+        }
+        const whole=Math.floor(fn/fd),remN=fn%fd;
+        const lwM=Math.max(28,Math.max(String(remN).length,String(fd).length)*14);
+        const improper=`<span class="fp-frac" style="color:${color};font-size:22px;"><span>${fn}</span><span class="fp-fline" style="width:${lwI}px;background:${color};"></span><span>${fd}</span></span>`;
+        const mixed=`<div style="display:inline-flex;align-items:center;gap:4px;"><span style="font-size:26px;font-weight:700;color:${color};">${whole}</span><span class="fp-frac" style="color:${color};font-size:18px;"><span>${remN}</span><span class="fp-fline" style="width:${lwM}px;background:${color};"></span><span>${fd}</span></span></div>`;
+        return`<div style="display:inline-flex;align-items:center;gap:10px;">${pfx}${improper}<span style="font-size:14px;color:#9a8470;">=</span>${pfx}${mixed}</div>`;
+      }
+
+      function fracTypeHTML(rawN,p){
+        if(rawN===0)return`<span class="fp-frac-type zero">0 <span class="fp-frac-type-def">— zero</span></span>`;
+        if(rawN%p===0)return`<span class="fp-frac-type whole">Whole Number <span class="fp-frac-type-def">— numerator ÷ denominator = ${rawN/p}</span></span>`;
+        if(rawN<p)return`<span class="fp-frac-type proper">Proper <span class="fp-frac-type-def">— numerator &lt; denominator</span></span>`;
+        return`<span class="fp-frac-type improper">Improper <span class="fp-frac-type-def">— numerator &gt; denominator</span></span>`;
+      }
+
+      function drawCells(s,color){
+        const p=ppr(s);let html='',idx=0;
+        for(let r=0;r<s.rects;r++){
+          let row='';
+          for(let c=0;c<p;c++){
+            row+=`<div class="fp-cell" data-idx="${idx}" style="background:${idx<s.selectedCount?color:BG};"></div>`;
+            idx++;
+          }
+          html+=`<div class="fp-row-rect">${row}</div>`;
+        }
+        return html;
+      }
+
+      function refreshDisplay(id,s,color){
+        const el=document.getElementById(id);
+        if(!el) return;
+        el.querySelector('.fp-rects').innerHTML=drawCells(s,color);
+        el.querySelector('.fp-fracval').innerHTML=renderFracHTML(s.selectedCount,ppr(s),color)+fracTypeHTML(s.selectedCount,ppr(s));
+        const hint=el.querySelector('.fp-hint');
+        if(hint)hint.textContent=ppr(s)>16?`Denominator ${ppr(s)} — cells are very small`:'';
+        const rSlider=document.getElementById(`${id}R`);
+        const cSlider=document.getElementById(`${id}C`);
+        if(rSlider)updateSliderFill(rSlider,'#888780');
+        if(cSlider)updateSliderFill(cSlider,color);
+        el.querySelector('.fp-rects').querySelectorAll('.fp-cell').forEach(cell=>{
+          cell.addEventListener('click',function(){
+            const idx=parseInt(this.dataset.idx);
+            s.selectedCount=idx<s.selectedCount?idx:idx+1;
+            refreshDisplay(id,s,color);
+          });
+        });
+        updateGuide();
+      }
+
+      function initBuilder(id,s,color,label){
+        document.getElementById(id).innerHTML=`
+          <div class="fp-blabel-row">
+            <div class="fp-blabel" style="color:${color};">${label}</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="fp-sign-toggle"><button class="fp-sign-btn active-pos" id="${id}SignPos">+</button><button class="fp-sign-btn" id="${id}SignNeg">−</button></div>
+              <button class="fp-clr" id="${id}Clr">Clear</button>
+            </div>
+          </div>
+          <div class="fp-ctrl">
+            <label>Whole Numbers</label>
+            <div class="fp-slider-wrap"><input type="range" class="dy-slider" id="${id}R" min="1" max="10" step="1" value="${s.rects}"></div>
+            <span class="fp-ctrl-val" id="${id}Ro">${s.rects}</span>
+          </div>
+          <div class="fp-ctrl">
+            <label>Denominator</label>
+            <div class="fp-slider-wrap"><input type="range" class="dy-slider" id="${id}C" min="1" max="32" step="1" value="${s.cuts}"></div>
+            <span class="fp-ctrl-val" id="${id}Co">${s.cuts}</span>
+          </div>
+          <div class="fp-numerator-hint">👆 Click cells below to set the numerator</div>
+          <div class="fp-rects"></div>
+          <div class="fp-fracval"></div>
+          <div class="fp-hint"></div>
+        `;
+        refreshDisplay(id,s,color);
+        document.getElementById(`${id}R`).addEventListener('input',function(){
+          s.rects=parseInt(this.value);document.getElementById(`${id}Ro`).textContent=s.rects;
+          s.selectedCount=Math.min(s.selectedCount,totalCells(s));
+          updateSliderFill(this,'#888780');refreshDisplay(id,s,color);
+        });
+        document.getElementById(`${id}C`).addEventListener('input',function(){
+          s.cuts=parseInt(this.value);document.getElementById(`${id}Co`).textContent=s.cuts;
+          s.selectedCount=Math.min(s.selectedCount,totalCells(s));
+          updateSliderFill(this,color);refreshDisplay(id,s,color);
+        });
+        document.getElementById(`${id}Clr`).addEventListener('click',function(){
+          s.selectedCount=0;refreshDisplay(id,s,color);
+          document.getElementById('resultArea').innerHTML='';
+        });
+        document.getElementById(`${id}SignPos`).addEventListener('click',function(){
+          s.sign=1;
+          document.getElementById(`${id}SignPos`).className='fp-sign-btn active-pos';
+          document.getElementById(`${id}SignNeg`).className='fp-sign-btn';
+          refreshDisplay(id,s,color);document.getElementById('resultArea').innerHTML='';
+        });
+        document.getElementById(`${id}SignNeg`).addEventListener('click',function(){
+          s.sign=-1;
+          document.getElementById(`${id}SignPos`).className='fp-sign-btn';
+          document.getElementById(`${id}SignNeg`).className='fp-sign-btn active-neg';
+          refreshDisplay(id,s,color);document.getElementById('resultArea').innerHTML='';
+        });
+      }
+
+      function updateGuide(){
+        const fA=getFrac(SA),fB=getFrac(SB);
+        const guide=document.getElementById('denomGuide');
+        const solveBtn=document.getElementById('solveBtn');
+        if(!guide||!solveBtn) return;
+        if(activeOp!=='+'&&activeOp!=='-'){guide.innerHTML='';solveBtn.disabled=false;return;}
+        if(fA.ppr===fB.ppr){
+          guide.innerHTML=denomMismatchSeen?`<div class="fp-match">Both fractions have a denominator of <strong>${fA.ppr}</strong> — denominators match. Ready to solve.</div>`:'';
+          solveBtn.disabled=false;
+        } else {
+          denomMismatchSeen=true;
+          const g=gcd(fA.ppr,fB.ppr),l=lcm(fA.ppr,fB.ppr);
+          guide.innerHTML=`
+            <div class="fp-denom-status">Fraction A has denominator <strong>${fA.ppr}</strong>. Fraction B has denominator <strong>${fB.ppr}</strong>.<br>They need to match before you can add or subtract.</div>
+            <div class="fp-guide-step">GCF of ${fA.ppr} and ${fB.ppr} = <strong>${g}</strong> &nbsp;&nbsp; LCD = <strong>${l}</strong><br>Try setting both fractions to a denominator of <strong>${l}</strong>.<br>Can you find other numbers that work too?</div>`;
+          solveBtn.disabled=true;
+          // Update Mr. Fraction dialogue
+          const speech=document.getElementById('mr-speech');
+          if(speech) speech.textContent=`Denominators don't match! To add or subtract, both need the same bottom number. The LCD of ${fA.ppr} and ${fB.ppr} is ${l} — try that!`;
+        }
+      }
+
+      function makeResultRects(totalSlots,p,colorFn,maxWidth){
+        const numRows=Math.ceil(totalSlots/p);
+        const cw=Math.max(5,Math.min(26,Math.floor(maxWidth/p)));
+        const rowW=cw*p;
+        let html=`<div class="res-rects" style="width:${rowW}px;">`;
+        for(let r=0;r<numRows;r++){
+          let cells='';
+          for(let c=0;c<p;c++){
+            const idx=r*p+c;
+            cells+=`<div style="flex:0 0 ${cw}px;width:${cw}px;height:100%;background:${colorFn(idx)};${c<p-1?'border-right:1px solid #c8b89a55;':''}"></div>`;
+          }
+          html+=`<div class="res-rect-row" style="width:${rowW}px;">${cells}</div>`;
+        }
+        return html+'</div>';
+      }
+
+      function resultDisplay(rawN,p,color,isNeg=false){
+        const negS=isNeg?`<span style="font-size:28px;font-weight:700;color:${color};margin-right:2px;">−</span>`:'';
+        if(rawN===0)return`<div style="text-align:center;margin-top:8px;font-size:26px;font-weight:700;color:#9a8470;">0</div>`;
+        if(rawN%p===0)return`<div style="text-align:center;margin-top:8px;display:flex;align-items:center;justify-content:center;">${negS}<span style="font-size:32px;font-weight:700;color:${color};">${rawN/p}</span></div>`;
+        const[fn,fd]=simplify(rawN,p);
+        const lwI=Math.max(28,Math.max(String(fn).length,String(fd).length)*14);
+        const improper=`<span class="fp-frac" style="color:${color};font-size:26px;"><span>${fn}</span><span class="fp-fline" style="width:${lwI}px;background:${color};"></span><span>${fd}</span></span>`;
+        if(fn<fd)return`<div style="display:flex;align-items:center;justify-content:center;margin-top:8px;">${negS}${improper}</div>`;
+        const whole=Math.floor(fn/fd),remN=fn%fd;
+        const lwM=Math.max(28,Math.max(String(remN).length,String(fd).length)*14);
+        const mixed=`<div style="display:inline-flex;align-items:center;gap:4px;"><span style="font-size:30px;font-weight:700;color:${color};">${whole}</span><span class="fp-frac" style="color:${color};font-size:22px;"><span>${remN}</span><span class="fp-fline" style="width:${lwM}px;background:${color};"></span><span>${fd}</span></span></div>`;
+        return`<div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px;">${negS}${improper}<span style="font-size:16px;color:#9a8470;">=</span>${negS}${mixed}</div>`;
+      }
+
+      function divResultDisplay(rawNum,rawDen,color,isNeg=false){
+        const[fn,fd]=simplify(rawNum,rawDen);
+        const lwI=Math.max(32,Math.max(String(fn).length,String(fd).length)*16);
+        const negS=isNeg?`<span style="font-size:28px;font-weight:700;color:${color};margin-right:2px;">−</span>`:'';
+        let html=`<div class="div-result-box">`;
+        if(fd===1){
+          html+=`<div style="text-align:center;display:flex;align-items:center;justify-content:center;">${negS}<span style="font-size:32px;font-weight:700;color:${color};">${fn}</span></div>`;
+        } else if(fn<fd){
+          html+=`<div style="display:flex;align-items:center;justify-content:center;">${negS}<span style="display:inline-flex;flex-direction:column;align-items:center;font-size:28px;font-weight:700;color:${color};line-height:1.2;"><span>${fn}</span><span style="display:block;width:${lwI}px;height:3px;background:${color};border-radius:2px;margin:5px 0;"></span><span>${fd}</span></span></div>`;
+        } else {
+          const whole=Math.floor(fn/fd),remN=fn%fd;
+          const lwM=Math.max(28,Math.max(String(remN).length,String(fd).length)*14);
+          const improper=`<span style="display:inline-flex;flex-direction:column;align-items:center;font-size:28px;font-weight:700;color:${color};line-height:1.2;"><span>${fn}</span><span style="display:block;width:${lwI}px;height:3px;background:${color};border-radius:2px;margin:5px 0;"></span><span>${fd}</span></span>`;
+          const mixed=`<div style="display:inline-flex;align-items:center;gap:4px;"><span style="font-size:30px;font-weight:700;color:${color};">${whole}</span><span class="fp-frac" style="color:${color};font-size:22px;"><span>${remN}</span><span class="fp-fline" style="width:${lwM}px;background:${color};"></span><span>${fd}</span></span></div>`;
+          html+=`<div style="display:flex;align-items:center;justify-content:center;gap:12px;">${negS}${improper}<span style="font-size:16px;color:#9a8470;">=</span>${negS}${mixed}</div>`;
+          if(rawNum!==fn||rawDen!==fd)html+=`<div class="div-simplified">unsimplified: <span>${rawNum}/${rawDen}</span></div>`;
+        }
+        return html+'</div>';
+      }
+
+      function makeBarWithArrows(colorArr,cellW,h,groupSize,fullGroups,remainder,lcd){
+        const aw=cellW*colorArr.length;
+        const arrowH=28, totalH=arrowH+h;
+        let svg=`<svg width="${aw}" height="${totalH}" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;">`;
+        for(let g=0;g<fullGroups;g++){
+          const x1=g*groupSize*cellW,x2=(g+1)*groupSize*cellW,mx=(x1+x2)/2,y=arrowH-6;
+          svg+=`<line x1="${x1+2}" y1="${y}" x2="${x2-2}" y2="${y}" stroke="${CR}" stroke-width="2.5" stroke-linecap="round"/>`;
+          svg+=`<line x1="${x1+2}" y1="${y}" x2="${x1+2}" y2="${y+6}" stroke="${CR}" stroke-width="2.5" stroke-linecap="round"/>`;
+          svg+=`<line x1="${x2-2}" y1="${y}" x2="${x2-2}" y2="${y+6}" stroke="${CR}" stroke-width="2.5" stroke-linecap="round"/>`;
+          svg+=`<polygon points="${mx},${y+13} ${mx-5},${y+5} ${mx+5},${y+5}" fill="${CR}"/>`;
+          svg+=`<text x="${mx}" y="${y-4}" text-anchor="middle" font-size="11" font-weight="700" font-family="Atkinson Hyperlegible,sans-serif" fill="${CR}">${g+1}</text>`;
+        }
+        if(remainder>0){
+          const x1=fullGroups*groupSize*cellW,x2=x1+remainder*cellW,mx=(x1+x2)/2,y=arrowH-6;
+          svg+=`<line x1="${x1+2}" y1="${y}" x2="${x2-2}" y2="${y}" stroke="${CO}" stroke-width="2" stroke-dasharray="4,3" stroke-linecap="round"/>`;
+          svg+=`<line x1="${x1+2}" y1="${y}" x2="${x1+2}" y2="${y+6}" stroke="${CO}" stroke-width="2" stroke-linecap="round"/>`;
+          svg+=`<line x1="${x2-2}" y1="${y}" x2="${x2-2}" y2="${y+6}" stroke="${CO}" stroke-width="2" stroke-linecap="round"/>`;
+          svg+=`<text x="${mx}" y="${y-4}" text-anchor="middle" font-size="11" font-weight="700" font-family="Atkinson Hyperlegible,sans-serif" fill="${CO}">rem</text>`;
+        }
+        svg+=`<g transform="translate(0,${arrowH})">`;
+        colorArr.forEach((c,i)=>{
+          svg+=`<rect x="${i*cellW}" y="0" width="${cellW}" height="${h}" fill="${c}" ${i<colorArr.length-1?`stroke="#c8b89a55" stroke-width="0.5"`:''}/>`;
+        });
+        svg+=`<rect x="0" y="0" width="${aw}" height="${h}" fill="none" stroke="#c8b89a" stroke-width="2" rx="5"/>`;
+        svg+=`</g></svg>`;
+        return`<div class="dv-bar-wrap"><div style="width:${aw}px;">${svg}</div></div>`;
+      }
+
+      function makeBar(colorArr,cellW,h){
+        const aw=cellW*colorArr.length;
+        let html=`<div class="dv-bar-wrap"><div style="display:flex;border:2px solid #c8b89a;border-radius:5px;overflow:hidden;height:${h}px;width:${aw}px;">`;
+        colorArr.forEach((c,i)=>{html+=`<div style="flex:0 0 ${cellW}px;width:${cellW}px;height:100%;background:${c};${i<colorArr.length-1?'border-right:1px solid #c8b89a55;':''}"></div>`;});
+        return html+'</div></div>';
+      }
+
+      function dvFracHTML(n,d,color){
+        const lw=Math.max(24,Math.max(String(n).length,String(d).length)*13);
+        if(n===0)return`<span style="font-size:20px;font-weight:700;color:#9a8470;">0</span>`;
+        if(n===d)return`<span class="dv-frac" style="color:${color};"><span>1</span></span>`;
+        return`<span class="dv-frac" style="color:${color};"><span>${n}</span><span class="dv-fline" style="width:${lw}px;background:${color};"></span><span>${d}</span></span>`;
+      }
+
+      document.getElementById('solveBtn').addEventListener('click',function(){
+        const fA=getFrac(SA),fB=getFrac(SB);
+        const op=activeOp;
+        const MW=460;
+        let inner='';
+
+        if(op==='+'||op==='-'){
+          const rawR=op==='+'?fA.rawN+fB.rawN:fA.rawN-fB.rawN;
+          const p=fA.ppr;
+          const totalSlots=Math.ceil(Math.max(fA.totalCells,Math.abs(rawR))/p)*p;
+          const absA=Math.abs(fA.rawN),absB=Math.abs(fB.rawN),absR=Math.abs(rawR);
+          const colorFn=(i)=>{
+            if(op==='+'){if(i<absA)return CA;if(i<absR)return CB;return BG;}
+            else{if(i<absR)return CR;return BG;}
+          };
+          inner+=`<div style="display:flex;justify-content:center;">${makeResultRects(totalSlots,p,colorFn,MW)}</div>`;
+          inner+=resultDisplay(Math.abs(rawR),p,CR,rawR<0);
+          inner+=`<div class="fp-legend">
+            <div class="fp-litem"><div class="fp-lswatch" style="background:${CA};"></div>Fraction A (${fA.rawN}/${p})</div>
+            ${op==='+'?`<div class="fp-litem"><div class="fp-lswatch" style="background:${CB};"></div>Fraction B (${fB.rawN}/${p})</div>`:''}
+            <div class="fp-litem"><div class="fp-lswatch" style="background:${CR};"></div>Result (${rawR<0?'-':''}${Math.abs(rawR)}/${p})</div>
+          </div>`;
+          // Dialogue
+          const speech=document.getElementById('mr-speech');
+          if(speech) speech.textContent=op==='+'
+            ? `See the two colours in the bar? Blue is Fraction A, red is what Fraction B added. Together they make ${Math.abs(rawR)}/${p}.`
+            : `The bar shows what's left after removing Fraction B from Fraction A. ${Math.abs(rawR)}/${p} remains.`;
+
+        } else if(op==='×'){
+          const absNA=Math.abs(fA.rawN),absNB=Math.abs(fB.rawN);
+          const rows=fA.ppr,cols=fB.ppr;
+          const cs=Math.max(12,Math.min(42,Math.floor(320/Math.max(rows,cols))));
+          let grid=`<div style="display:flex;justify-content:center;"><div style="display:inline-grid;grid-template-columns:repeat(${cols},${cs}px);border:2px solid #c8b89a;border-radius:5px;overflow:hidden;">`;
+          for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+            const inA=r<absNA,inB=c<absNB;
+            grid+=`<div style="width:${cs}px;height:${cs}px;background:${inA&&inB?CO:inA?CA+'66':inB?CB+'66':BG};${c<cols-1?'border-right:1px solid #c8b89a44;':''}${r<rows-1?'border-bottom:1px solid #c8b89a44;':''}"></div>`;
+          }
+          grid+=`</div></div>`;
+          const multSign=(fA.sign||1)*(fB.sign||1);
+          inner+=grid+resultDisplay(absNA*absNB,rows*cols,CR,multSign<0);
+          if(multSign!==1){
+            const sA=fA.sign<0?'−':'+',sB=fB.sign<0?'−':'+',sR=multSign<0?'−':'+';
+            const rule=multSign<0?'A negative × a positive is <strong>negative</strong>.':'A negative × a negative is <strong>positive</strong>.';
+            inner+=`<div class="fp-guide-step" style="margin-top:.75rem;">Sign rule: <strong>(${sA}) × (${sB}) = ${sR}</strong> · ${rule}</div>`;
+          }
+          inner+=`<div class="fp-legend">
+            <div class="fp-litem"><div class="fp-lswatch" style="background:${CA}66;border:1.5px solid ${CA};"></div>A rows</div>
+            <div class="fp-litem"><div class="fp-lswatch" style="background:${CB}66;border:1.5px solid ${CB};"></div>B columns</div>
+            <div class="fp-litem"><div class="fp-lswatch" style="background:${CO};"></div>Overlap = result</div>
+          </div>`;
+          const speech=document.getElementById('mr-speech');
+          if(speech) speech.textContent=`The orange overlap is the result! Multiplying fractions means taking a fraction OF a fraction — notice it's smaller than either original.`;
+
+        } else if(op==='÷'){
+          const nA=Math.abs(fA.rawN),dA=fA.ppr,nB=Math.abs(fB.rawN),dB=fB.ppr;
+          const divSign=(fA.sign||1)*(fB.sign||1);
+          const rawResultNum=nA*dB,rawResultDen=dA*nB;
+          const g=gcd(dA,dB),lcd=(dA*dB)/g;
+          const scaleA=lcd/dA,scaleB=lcd/dB;
+          const aScaled=nA*scaleA,bScaled=nB*scaleB;
+          const fullGroups=bScaled>0?Math.floor(aScaled/bScaled):0;
+          const remainder=bScaled>0?aScaled%bScaled:0;
+          const CW=Math.max(5,Math.min(22,Math.floor(MW/lcd)));
+          const aMap=[],grpMap=[],bMap=[];
+          for(let i=0;i<lcd;i++){
+            aMap.push(i<aScaled?CA:BG);
+            grpMap.push(i<aScaled?GROUP_PAL[bScaled>0?Math.floor(i/bScaled)%GROUP_PAL.length:0]:BG);
+            bMap.push(i<bScaled?CB:BG);
+          }
+          inner+=`<div class="dv-equation">${dvFracHTML(nA,dA,CA)}<span style="color:#6b5a45;">÷</span>${dvFracHTML(nB,dB,CB)}<span style="color:#6b5a45;">=</span>${nB===0?`<span style="font-size:16px;font-weight:700;color:#9a8470;">undefined</span>`:dvFracHTML(rawResultNum,rawResultDen,CR)}</div>`;
+          inner+=`<div class="dv-row"><div class="dv-rowlabel" style="color:${CA};">Fraction A &nbsp;<span style="font-weight:400;font-size:11px;color:#9a8470;">${nA}/${dA}</span></div>${makeBar(aMap,CW,48)}</div>`;
+          inner+=`<div class="dv-row"><div class="dv-rowlabel" style="color:${CB};margin-bottom:4px;">Groups of B fitting inside A</div>${bScaled>0?makeBarWithArrows(grpMap,CW,48,bScaled,fullGroups,remainder,lcd):`<div style="font-size:13px;color:#9a8470;">No groups — B is 0</div>`}</div>`;
+          inner+=`<div class="dv-row"><div class="dv-rowlabel" style="color:${CB};">One group of Fraction B &nbsp;<span style="font-weight:400;font-size:11px;color:#9a8470;">${nB}/${dB}</span></div>${makeBar(bMap,CW,48)}</div>`;
+          if(nB===0){
+            inner+=`<div style="font-size:13px;font-weight:700;color:#9a8470;text-align:center;">Fraction B is 0 — division by zero is undefined.</div>`;
+          } else {
+            inner+=divResultDisplay(rawResultNum,rawResultDen,CR,divSign<0);
+            inner+=`<div class="fp-legend">`;
+            for(let i=0;i<Math.min(fullGroups+(remainder>0?1:0),GROUP_PAL.length);i++){
+              inner+=`<div class="fp-litem"><div class="fp-lswatch" style="background:${i<fullGroups?GROUP_PAL[i%GROUP_PAL.length]:CO};${i===fullGroups?'opacity:.8;':''}"></div>${i<fullGroups?`Group ${i+1}`:'Remainder'}</div>`;
+            }
+            inner+=`<div class="fp-litem"><div style="width:24px;height:3px;background:${CR};border-radius:2px;"></div>Group count</div></div>`;
+            const speech=document.getElementById('mr-speech');
+            if(speech) speech.textContent=`Count the brackets above the bar — each one is a full group of Fraction B fitting inside Fraction A. That count IS the answer!`;
+          }
+        }
+
+        document.getElementById('resultArea').innerHTML=`<div class="fp-result">${inner}</div>`;
+      });
+
+      document.querySelectorAll('.fp-opbtn').forEach(btn=>{
+        btn.addEventListener('click',function(){
+          activeOp=this.id.replace('op','');
+          document.querySelectorAll('.fp-opbtn').forEach(b=>{
+            b.classList.remove('active');
+            b.style.background=BG;b.style.color='#6b5a45';b.style.borderColor='#c8b89a';
+          });
+          this.classList.add('active');
+          this.style.background=OP_COLORS[activeOp];
+          this.style.color='#fff';this.style.borderColor='transparent';
+          document.getElementById('resultArea').innerHTML='';
+          denomMismatchSeen=false;updateGuide();
+          // Dialogue on op switch
+          const msgs={
+            '+':'To add fractions, denominators must match first. Set both to the same bottom number!',
+            '-':'Subtracting? Same rule — denominators must match. Then take the smaller numerator away.',
+            '×':'Multiplying is the easy one — just multiply tops together and bottoms together. Watch the grid!',
+            '÷':'Division flips the second fraction and multiplies. How many times does B fit inside A?'
+          };
+          const speech=document.getElementById('mr-speech');
+          if(speech) speech.textContent=msgs[activeOp]||'';
+        });
+      });
+
+      initBuilder('bA',SA,CA,'Fraction A');
+      initBuilder('bB',SB,CB,'Fraction B');
+    })();
+
+    /* ---- CONVERT ENGINE (transplanted from fraction-converter.html) ---- */
+    (function(){
+      let cvN = 3, cvD = 4;
+
+      function cvGcd(a,b){ return b===0?a:cvGcd(b,a%b); }
+
+      window.cvResetAll = function(){
+        cvN=3; cvD=4;
+        document.getElementById('cv-numer').value=3;
+        document.getElementById('cv-denom').value=4;
+        document.getElementById('cv-dec-slider').value=75;
+        document.getElementById('cv-dec-input').value='0.75';
+        document.getElementById('cv-pct-slider').value=750;
+        document.getElementById('cv-pct-input').value='75';
+        cvSyncDisplay(0.75,75);
+      };
+
+      function cvDrawPies(n,d){
+        const container=document.getElementById('cv-pie-container');
+        if(!container) return;
+        container.innerHTML='';
+        const fullPies=Math.floor(n/d), remainder=n%d;
+        const total=fullPies+(remainder>0?1:0);
+        const size=Math.min(80,Math.floor(180/Math.max(total,1))-8);
+        const r=size/2-2, cx=size/2, cy=size/2;
+        const MAX_SLICES=64, highDenom=d>MAX_SLICES;
+
+        function makePie(filledCount,sliceCount,isFull){
+          const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+          svg.setAttribute('width',size); svg.setAttribute('height',size);
+          svg.setAttribute('viewBox',`0 0 ${size} ${size}`);
+          const bg=document.createElementNS('http://www.w3.org/2000/svg','circle');
+          bg.setAttribute('cx',cx); bg.setAttribute('cy',cy); bg.setAttribute('r',r);
+          bg.setAttribute('fill','#E6F1FB'); svg.appendChild(bg);
+          if(highDenom){
+            const proportion=isFull?1:filledCount/sliceCount;
+            if(proportion>=1){
+              const filled=document.createElementNS('http://www.w3.org/2000/svg','circle');
+              filled.setAttribute('cx',cx); filled.setAttribute('cy',cy); filled.setAttribute('r',r);
+              filled.setAttribute('fill','#378ADD'); svg.appendChild(filled);
+            } else if(proportion>0){
+              const angle=proportion*2*Math.PI-Math.PI/2;
+              const x2=cx+r*Math.cos(angle), y2=cy+r*Math.sin(angle);
+              const largeArc=proportion>0.5?1:0;
+              const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+              path.setAttribute('d',`M ${cx} ${cy} L ${cx} ${cy-r} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`);
+              path.setAttribute('fill','#378ADD'); svg.appendChild(path);
+            }
+          } else {
+            for(let i=0;i<sliceCount;i++){
+              const sa=(i/sliceCount)*2*Math.PI-Math.PI/2;
+              const ea=((i+1)/sliceCount)*2*Math.PI-Math.PI/2;
+              const x1=cx+r*Math.cos(sa),y1=cy+r*Math.sin(sa);
+              const x2=cx+r*Math.cos(ea),y2=cy+r*Math.sin(ea);
+              const la=(ea-sa)>Math.PI?1:0;
+              if(i<filledCount){
+                const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+                path.setAttribute('d',`M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${la} 1 ${x2} ${y2} Z`);
+                path.setAttribute('fill','#378ADD'); svg.appendChild(path);
+              }
+              const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+              line.setAttribute('x1',cx); line.setAttribute('y1',cy);
+              line.setAttribute('x2',x1); line.setAttribute('y2',y1);
+              line.setAttribute('stroke','white'); line.setAttribute('stroke-width','1.5');
+              svg.appendChild(line);
+            }
+          }
+          const border=document.createElementNS('http://www.w3.org/2000/svg','circle');
+          border.setAttribute('cx',cx); border.setAttribute('cy',cy); border.setAttribute('r',r);
+          border.setAttribute('fill','none'); border.setAttribute('stroke','#185FA5'); border.setAttribute('stroke-width','1.5');
+          svg.appendChild(border);
+          return svg;
+        }
+        for(let i=0;i<fullPies;i++) container.appendChild(makePie(d,d,true));
+        if(remainder>0) container.appendChild(makePie(remainder,d,false));
+        if(total===0) container.appendChild(makePie(0,Math.max(d,1),false));
+      }
+
+      function cvDrawNumberLine(val){
+        const svg=document.getElementById('cv-numline-svg');
+        if(!svg) return;
+        svg.innerHTML='';
+        const pad=18,W=220,usableW=W-pad*2;
+        const fullRows=Math.floor(val/10), remainder=val%10;
+        const totalRows=fullRows+(remainder>0||val===0?1:0);
+        const rowH=32,gap=18;
+        const svgH=Math.max(80,totalRows*(rowH+gap)+10);
+        svg.setAttribute('viewBox',`0 0 ${W} ${svgH}`);
+        for(let row=0;row<totalRows;row++){
+          const tickY=20+row*(rowH+gap);
+          const isOverflow=row>0, isFull=row<fullRows;
+          const rowVal=isFull?10:remainder;
+          const fillFrac=isFull?1:(val===0?0:rowVal/10);
+          const fillW=fillFrac*usableW;
+          const trackColor=isOverflow?'#FAC775':'#9FE1CB';
+          const fillColor=isOverflow?'#BA7517':'#1D9E75';
+          const textColor=isOverflow?'#633806':'#085041';
+          const tickColor=isOverflow?'#BA7517':'#0F6E56';
+          const tickFaintColor=isOverflow?'#FAC775':'#9FE1CB';
+          const track=document.createElementNS('http://www.w3.org/2000/svg','rect');
+          track.setAttribute('x',pad); track.setAttribute('y',tickY-2);
+          track.setAttribute('width',usableW); track.setAttribute('height',4);
+          track.setAttribute('rx','2'); track.setAttribute('fill',trackColor);
+          svg.appendChild(track);
+          if(fillW>0){
+            const fill=document.createElementNS('http://www.w3.org/2000/svg','rect');
+            fill.setAttribute('x',pad); fill.setAttribute('y',tickY-2);
+            fill.setAttribute('width',fillW); fill.setAttribute('height',4);
+            fill.setAttribute('rx','2'); fill.setAttribute('fill',fillColor);
+            svg.appendChild(fill);
+          }
+          const rowStart=row*10;
+          for(let i=0;i<=10;i++){
+            const x=pad+(i/10)*usableW;
+            const tick=document.createElementNS('http://www.w3.org/2000/svg','line');
+            tick.setAttribute('x1',x); tick.setAttribute('y1',tickY-6);
+            tick.setAttribute('x2',x); tick.setAttribute('y2',tickY+6);
+            tick.setAttribute('stroke',i%5===0?tickColor:tickFaintColor);
+            tick.setAttribute('stroke-width',i%5===0?'1.5':'1');
+            svg.appendChild(tick);
+            if(i%5===0){
+              const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+              lbl.setAttribute('x',x); lbl.setAttribute('y',tickY+16);
+              lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('font-size','9');
+              lbl.setAttribute('font-weight','700'); lbl.setAttribute('fill',tickColor);
+              lbl.setAttribute('font-family','Atkinson Hyperlegible,sans-serif');
+              lbl.textContent=rowStart+i;
+              svg.appendChild(lbl);
+            }
+          }
+          if(isFull||row===totalRows-1){
+            const markerX=pad+fillFrac*usableW;
+            const marker=document.createElementNS('http://www.w3.org/2000/svg','circle');
+            marker.setAttribute('cx',markerX); marker.setAttribute('cy',tickY);
+            marker.setAttribute('r','6'); marker.setAttribute('fill',fillColor);
+            marker.setAttribute('stroke','white'); marker.setAttribute('stroke-width','2');
+            svg.appendChild(marker);
+            if(row===totalRows-1){
+              const valLbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+              valLbl.setAttribute('x',Math.min(Math.max(markerX,24),W-20));
+              valLbl.setAttribute('y',tickY-10);
+              valLbl.setAttribute('text-anchor','middle'); valLbl.setAttribute('font-size','10');
+              valLbl.setAttribute('font-weight','700'); valLbl.setAttribute('fill',textColor);
+              valLbl.setAttribute('font-family','Atkinson Hyperlegible,sans-serif');
+              valLbl.textContent=parseFloat(val.toFixed(4));
+              svg.appendChild(valLbl);
+            }
+          }
+          if(isOverflow){
+            const badge=document.createElementNS('http://www.w3.org/2000/svg','rect');
+            badge.setAttribute('x',pad-2); badge.setAttribute('y',tickY-13);
+            badge.setAttribute('width',36); badge.setAttribute('height',11);
+            badge.setAttribute('rx','3'); badge.setAttribute('fill','#FAC775');
+            svg.appendChild(badge);
+            const bLbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+            bLbl.setAttribute('x',pad+16); bLbl.setAttribute('y',tickY-4);
+            bLbl.setAttribute('text-anchor','middle'); bLbl.setAttribute('font-size','8');
+            bLbl.setAttribute('font-weight','700'); bLbl.setAttribute('fill','#412402');
+            bLbl.setAttribute('font-family','Atkinson Hyperlegible,sans-serif');
+            bLbl.textContent='over!';
+            svg.appendChild(bLbl);
+          }
+        }
+      }
+
+      function cvDrawPctRect(pct){
+        const svg=document.getElementById('cv-pct-svg');
+        if(!svg) return;
+        svg.innerHTML='';
+        const pad=8,rectH=30,rowGap=10,W=200,usableW=W-pad*2;
+        const val=Math.max(pct,0);
+        const fullRows=Math.floor(val/100), remainder=val%100;
+        const totalRows=fullRows+(remainder>0||val===0?1:0);
+        const svgH=totalRows*(rectH+rowGap)+16;
+        svg.setAttribute('viewBox',`0 0 ${W} ${svgH}`);
+        for(let row=0;row<totalRows;row++){
+          const rectY=row*(rectH+rowGap)+4;
+          const isOverflow=row>0, isFull=row<fullRows;
+          const rowPct=isFull?100:remainder;
+          const fillW=(rowPct/100)*usableW;
+          const bgColor=isOverflow?'#FAEEDA':'#FAECE7';
+          const fillColor=isOverflow?'#BA7517':'#D85A30';
+          const strokeColor=isOverflow?'#854F0B':'#D85A30';
+          const textOnFill='white', textEmpty=isOverflow?'#633806':'#993C1D';
+          const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');
+          bg.setAttribute('x',pad); bg.setAttribute('y',rectY);
+          bg.setAttribute('width',usableW); bg.setAttribute('height',rectH);
+          bg.setAttribute('rx','4'); bg.setAttribute('fill',bgColor);
+          bg.setAttribute('stroke',strokeColor); bg.setAttribute('stroke-width','1.5');
+          svg.appendChild(bg);
+          if(fillW>0){
+            const fill=document.createElementNS('http://www.w3.org/2000/svg','rect');
+            fill.setAttribute('x',pad); fill.setAttribute('y',rectY);
+            fill.setAttribute('width',Math.min(fillW,usableW)); fill.setAttribute('height',rectH);
+            fill.setAttribute('rx','4'); fill.setAttribute('fill',fillColor);
+            svg.appendChild(fill);
+          }
+          for(let i=1;i<10;i++){
+            const x=pad+(i/10)*usableW;
+            const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+            line.setAttribute('x1',x); line.setAttribute('y1',rectY);
+            line.setAttribute('x2',x); line.setAttribute('y2',rectY+rectH);
+            line.setAttribute('stroke','rgba(255,255,255,0.35)'); line.setAttribute('stroke-width','1');
+            svg.appendChild(line);
+          }
+          const rowStart=row*100;
+          const labelX=fillW>36?pad+fillW/2:pad+usableW/2;
+          const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+          lbl.setAttribute('x',labelX); lbl.setAttribute('y',rectY+rectH/2+5);
+          lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('font-size','12');
+          lbl.setAttribute('font-weight','700');
+          lbl.setAttribute('fill',fillW>36?textOnFill:textEmpty);
+          lbl.setAttribute('font-family','Atkinson Hyperlegible,sans-serif');
+          lbl.textContent=parseFloat(val.toFixed(1))+'%';
+          svg.appendChild(lbl);
+          if(isOverflow){
+            const badge=document.createElementNS('http://www.w3.org/2000/svg','rect');
+            badge.setAttribute('x',W-pad-36); badge.setAttribute('y',rectY-1);
+            badge.setAttribute('width',36); badge.setAttribute('height',rectH+2);
+            badge.setAttribute('rx','0 4 4 0'); badge.setAttribute('fill','#EF9F27');
+            svg.appendChild(badge);
+            const bLbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+            bLbl.setAttribute('x',W-pad-18); bLbl.setAttribute('y',rectY+rectH/2+4);
+            bLbl.setAttribute('text-anchor','middle'); bLbl.setAttribute('font-size','9');
+            bLbl.setAttribute('font-weight','700'); bLbl.setAttribute('fill','#412402');
+            bLbl.setAttribute('font-family','Atkinson Hyperlegible,sans-serif');
+            bLbl.textContent='over!';
+            svg.appendChild(bLbl);
+          }
+          const scaleY=rectY+rectH+8;
+          [rowStart+'%',(rowStart+50)+'%',(rowStart+100)+'%'].forEach((t,i)=>{
+            const x=pad+(i/2)*usableW;
+            const sl=document.createElementNS('http://www.w3.org/2000/svg','text');
+            sl.setAttribute('x',x); sl.setAttribute('y',scaleY);
+            sl.setAttribute('text-anchor',i===0?'start':i===2?'end':'middle');
+            sl.setAttribute('font-size','8'); sl.setAttribute('fill',isOverflow?'#633806':'#993C1D');
+            sl.setAttribute('font-family','Atkinson Hyperlegible,sans-serif');
+            sl.textContent=t; svg.appendChild(sl);
+          });
+        }
+      }
+
+      function cvUpdateConnectCards(n,d,dec,pct){
+        const decStr=parseFloat(dec.toFixed(4));
+        const pctStr=parseFloat(pct.toFixed(2));
+        const g=cvGcd(Math.abs(n),Math.abs(d));
+        document.getElementById('cv-cc-fd').textContent=`${n} ÷ ${d} = ${decStr}`;
+        document.getElementById('cv-cc-dp').textContent=`${decStr} × 100 = ${pctStr}%`;
+        document.getElementById('cv-cc-pf').textContent=`${Math.round(pct)}/100 = ${n/g}/${d/g}`;
+      }
+
+      function cvSyncDisplay(decVal,pctVal){
+        document.getElementById('cv-fl-num').textContent=cvN;
+        document.getElementById('cv-fl-den').textContent=cvD;
+        document.getElementById('cv-dec-label').textContent=parseFloat(decVal.toFixed(4));
+        document.getElementById('cv-pct-label').textContent=parseFloat(pctVal.toFixed(2))+'%';
+        cvDrawPies(cvN,cvD);
+        cvDrawNumberLine(Math.max(decVal,0));
+        cvDrawPctRect(Math.max(pctVal,0));
+        cvUpdateConnectCards(cvN,cvD,decVal,pctVal);
+        // Mr. Fraction dynamic dialogue
+        const speech=document.getElementById('mr-speech');
+        if(speech){
+          const dec=parseFloat(decVal.toFixed(4));
+          const pct=parseFloat(pctVal.toFixed(1));
+          const msgs=[
+            `${cvN}/${cvD}, ${dec}, and ${pct}% — three costumes for the exact same number!`,
+            `See the pie? The blue slice is ${cvN}/${cvD} of the whole circle.`,
+            `${dec} on the number line, ${pct}% on the bar — same position, different labels.`,
+            `To get from ${cvN}/${cvD} to decimal: ${cvN} ÷ ${cvD} = ${dec}. To get percent: × 100 = ${pct}%.`
+          ];
+          speech.textContent=msgs[Math.floor(Date.now()/6000)%msgs.length];
+        }
+      }
+
+      function cvUpdateFromFrac(){
+        const dec=cvN/cvD, pct=dec*100;
+        document.getElementById('cv-dec-input').value=parseFloat(dec.toFixed(4));
+        document.getElementById('cv-dec-slider').value=Math.min(Math.round(dec*100),1000);
+        document.getElementById('cv-pct-input').value=parseFloat(pct.toFixed(2));
+        document.getElementById('cv-pct-slider').value=Math.min(Math.round(pct*10),1000);
+        cvSyncDisplay(dec,pct);
+      }
+
+      document.getElementById('cv-numer').addEventListener('input',function(){
+        cvN=Math.max(1,parseInt(this.value)||1); cvUpdateFromFrac();
+      });
+      document.getElementById('cv-denom').addEventListener('input',function(){
+        cvD=Math.max(1,parseInt(this.value)||1); cvUpdateFromFrac();
+      });
+      document.getElementById('cv-dec-slider').addEventListener('input',function(){
+        const val=parseInt(this.value)/100;
+        cvN=Math.round(val*100); cvD=100;
+        const g=cvGcd(cvN,cvD); cvN/=g; cvD/=g;
+        document.getElementById('cv-numer').value=cvN;
+        document.getElementById('cv-denom').value=cvD;
+        document.getElementById('cv-dec-input').value=val.toFixed(2);
+        const p=val*100;
+        document.getElementById('cv-pct-input').value=p.toFixed(1);
+        document.getElementById('cv-pct-slider').value=Math.round(p*10);
+        cvSyncDisplay(val,p);
+      });
+      document.getElementById('cv-dec-input').addEventListener('input',function(){
+        const val=Math.min(Math.max(parseFloat(this.value)||0,0),10);
+        cvN=Math.round(val*1000); cvD=1000;
+        const g=cvGcd(cvN,cvD); cvN/=g; cvD/=g;
+        document.getElementById('cv-numer').value=cvN;
+        document.getElementById('cv-denom').value=cvD;
+        document.getElementById('cv-dec-slider').value=Math.round(val*100);
+        const p=val*100;
+        document.getElementById('cv-pct-input').value=p.toFixed(1);
+        document.getElementById('cv-pct-slider').value=Math.min(Math.round(p*10),1000);
+        cvSyncDisplay(val,p);
+      });
+      document.getElementById('cv-pct-slider').addEventListener('input',function(){
+        const val=parseInt(this.value)/10;
+        cvN=Math.round(val*10); cvD=1000;
+        const g=cvGcd(cvN,cvD); cvN/=g; cvD/=g;
+        document.getElementById('cv-numer').value=cvN;
+        document.getElementById('cv-denom').value=cvD;
+        document.getElementById('cv-pct-input').value=val.toFixed(1);
+        const d=val/100;
+        document.getElementById('cv-dec-input').value=d.toFixed(3);
+        document.getElementById('cv-dec-slider').value=Math.round(d*100);
+        cvSyncDisplay(d,val);
+      });
+      document.getElementById('cv-pct-input').addEventListener('input',function(){
+        const val=Math.min(Math.max(parseFloat(this.value)||0,0),100);
+        cvN=Math.round(val*10); cvD=1000;
+        const g=cvGcd(cvN,cvD); cvN/=g; cvD/=g;
+        document.getElementById('cv-numer').value=cvN;
+        document.getElementById('cv-denom').value=cvD;
+        document.getElementById('cv-pct-slider').value=Math.round(val*10);
+        const d=val/100;
+        document.getElementById('cv-dec-input').value=d.toFixed(3);
+        document.getElementById('cv-dec-slider').value=Math.round(d*100);
+        cvSyncDisplay(d,val);
+      });
+
+      cvUpdateFromFrac();
+    })();
+
+    /* ---- INIT ---- */
+    renderLessonStep();
+
+    /* ---- STEP 6: CLICKABLE SEGMENTED LINES ---- */
+    // State: how many segments are filled per line
+    const step6State = { halves:0, thirds:0, quarters:0, fifths:0 };
+    const step6Divs  = { halves:2, thirds:3, quarters:4, fifths:5 };
+    const step6Colors = { halves:'#c96a1f', thirds:'#2e7a6e', quarters:'#2a5fa0', fifths:'#4a7c2f' };
+    const step6Labels = {
+      halves:   ['0','1/2','1'],
+      thirds:   ['0','1/3','2/3','1'],
+      quarters: ['0','1/4','1/2','3/4','1'],
+      fifths:   ['0','1/5','2/5','3/5','4/5','1'],
+    };
+
+    window.step6ClickSeg = function(id, segIdx, divisions, hex) {
+      // Clicking a filled segment clears back to before it; clicking empty fills up to it
+      const current = step6State[id];
+      const newVal = (segIdx + 1 === current) ? segIdx : segIdx + 1;
+      step6State[id] = newVal;
+      step6RenderLine(id);
+      step6CheckEquivalence();
+    };
+
+    function step6RenderLine(id) {
+      const filled = step6State[id];
+      const divs   = step6Divs[id];
+      const hex    = step6Colors[id];
+      for (let i = 0; i < divs; i++) {
+        const seg = document.getElementById(`seg-${id}-${i}`);
+        if (!seg) continue;
+        seg.style.background = i < filled ? hex : 'var(--cream-mid)';
+      }
+      const lbl = document.getElementById(`label-${id}`);
+      if (lbl) lbl.textContent = `${filled}/${divs}`;
+    }
+
+    function step6CheckEquivalence() {
+      const hint = document.getElementById('step6-hint');
+      if (!hint) return;
+
+      // Find active lines with non-zero fill
+      const active = Object.keys(step6State).filter(id => {
+        const btn = document.getElementById('toggle-' + id);
+        return btn && btn.dataset.active === 'true' && step6State[id] > 0;
+      });
+
+      if (active.length === 0) {
+        hint.innerHTML = '';
+        return;
+      }
+
+      // Check for equivalences: compare n/d as decimals
+      const vals = {};
+      active.forEach(id => {
+        vals[id] = step6State[id] / step6Divs[id];
+      });
+
+      // Find matching pairs
+      const matches = [];
+      const nonMatches = [];
+      for (let i = 0; i < active.length; i++) {
+        for (let j = i+1; j < active.length; j++) {
+          const a = active[i], b = active[j];
+          if (Math.abs(vals[a] - vals[b]) < 0.001) {
+            matches.push(`<strong style="color:${step6Colors[a]}">${step6State[a]}/${step6Divs[a]}</strong> = <strong style="color:${step6Colors[b]}">${step6State[b]}/${step6Divs[b]}</strong>`);
+          }
+        }
+      }
+
+      // Summary of what each line shows
+      const summary = active.map(id =>
+        `<span style="color:${step6Colors[id]};font-weight:700;">${step6State[id]}/${step6Divs[id]}</span>`
+      ).join(' &nbsp;·&nbsp; ');
+
+      if (matches.length > 0) {
+        hint.innerHTML = `<div class="callout callout-green" style="font-size:13px;">
+          ✅ Equivalent! ${matches.join(' &nbsp;&amp;&nbsp; ')} — they fill the same amount of the whole!
+        </div>`;
+      } else if (active.length > 1) {
+        hint.innerHTML = `<div class="callout callout-teal" style="font-size:13px;">
+          Currently showing: ${summary} — these are <strong>not equivalent</strong>. Keep adjusting!
+        </div>`;
+      } else {
+        hint.innerHTML = `<p style="font-size:13px;color:var(--brown-muted);">Showing ${summary} — fill another line to compare.</p>`;
+      }
+    }
+
+    window.step6ResetAll = function() {
+      Object.keys(step6State).forEach(id => {
+        step6State[id] = 0;
+        step6RenderLine(id);
+      });
+      const hint = document.getElementById('step6-hint');
+      if (hint) hint.innerHTML = '';
+    };
+
+    window.step6Toggle = function(id, color) {
+      const line = document.getElementById('line-' + id);
+      const btn  = document.getElementById('toggle-' + id);
+      if (!line || !btn) return;
+      const active = btn.dataset.active === 'true';
+      if (active) {
+        line.style.opacity = '0.1';
+        line.style.pointerEvents = 'none';
+        btn.style.background = 'transparent';
+        btn.style.color = color;
+        btn.dataset.active = 'false';
+      } else {
+        line.style.opacity = '1';
+        line.style.pointerEvents = '';
+        btn.style.background = color;
+        btn.style.color = '#fff';
+        btn.dataset.active = 'true';
+      }
+      step6CheckEquivalence();
+    };
+
+  })();
+  </script>
+
+  <!-- Black background remover: runs on every Mr. Fraction / Gear image load -->
+  <script>
+  (function(){
+    // Removes near-black pixels from PNG/GIF images using canvas
+    // Works in all browsers including Edge, no base64 in HTML required
+    function removeBlackBg(img, threshold) {
+      threshold = threshold || 60;
+      try {
+        const canvas = document.createElement('canvas');
+        const w = canvas.width  = img.naturalWidth  || img.width;
+        const h = canvas.height = img.naturalHeight || img.height;
+        if (!w || !h) return;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const d = imgData.data;
+
+        // Helper: is this pixel "black-ish"?
+        const isBlack = (idx) => d[idx] < threshold && d[idx+1] < threshold && d[idx+2] < threshold;
+
+        // Flood-fill from every edge pixel inward.
+        // Only black pixels that are CONNECTED to the edge get removed.
+        // Interior black (outlines, glasses, beard details) is preserved.
+        const visited = new Uint8Array(w * h);
+        const stack = [];
+
+        // Seed: every pixel along the 4 edges
+        for (let x = 0; x < w; x++) {
+          stack.push(x, 0);                  // top edge
+          stack.push(x, h - 1);              // bottom edge
+        }
+        for (let y = 0; y < h; y++) {
+          stack.push(0, y);                  // left edge
+          stack.push(w - 1, y);              // right edge
+        }
+
+        while (stack.length) {
+          const y = stack.pop();
+          const x = stack.pop();
+          if (x < 0 || x >= w || y < 0 || y >= h) continue;
+          const flatIdx = y * w + x;
+          if (visited[flatIdx]) continue;
+          visited[flatIdx] = 1;
+          const pxIdx = flatIdx * 4;
+          if (!isBlack(pxIdx)) continue;
+          // It's a black edge-connected pixel — make it transparent
+          d[pxIdx + 3] = 0;
+          // Walk to 4 neighbors
+          stack.push(x - 1, y);
+          stack.push(x + 1, y);
+          stack.push(x, y - 1);
+          stack.push(x, y + 1);
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+        img.src = canvas.toDataURL('image/png');
+        img.style.background = 'transparent';
+      } catch(e) {
+        // Cross-origin or tainted canvas — skip silently
+      }
+    }
+
+    const MR_FRACTION_SRCS = [
+      'Mr__Fraction_Front.png',
+      'Mr__Fraction_Back.png',
+      'Mr__Fraction_Left_Side.png',
+      'Mr__Fraction_Right_Side.png',
+      'Mr__Fraction_Ladder.png',
+      'Mr__Fraction_GIF.gif',
+      'Mr__Fraction_GIF.png',
+      'Gear.png',
+      'Pie.png',
+      'Pizza.png'
+    ];
+
+    function processImage(img) {
+      const src = img.src || '';
+      const matches = MR_FRACTION_SRCS.some(name => src.includes(name));
+      if (!matches) return;
+      if (img.complete && img.naturalWidth) {
+        removeBlackBg(img);
+      } else {
+        img.addEventListener('load', function() { removeBlackBg(img); }, { once: true });
+      }
+    }
+
+    function processAll() {
+      document.querySelectorAll('img').forEach(processImage);
+    }
+
+    // Run immediately for already-loaded images, and watch for new ones
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', processAll);
+    } else {
+      processAll();
+    }
+
+    // MutationObserver to catch dynamically injected images (lesson steps, etc.)
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        m.addedNodes.forEach(function(node) {
+          if (node.nodeType !== 1) return;
+          if (node.tagName === 'IMG') processImage(node);
+          node.querySelectorAll && node.querySelectorAll('img').forEach(processImage);
+        });
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  })();
+  </script>
+</body>
+</html>
