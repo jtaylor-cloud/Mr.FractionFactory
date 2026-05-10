@@ -2,7 +2,7 @@
 
 **An interactive, dyslexia-friendly fraction learning website for middle school students**
 
-Live site → `https://<your-username>.github.io/<your-repo-name>/`
+Live site → `https://jtaylor-cloud.github.io/Mr.FractionFactory/`
 
 ---
 
