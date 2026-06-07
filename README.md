@@ -33,6 +33,7 @@ Mr. Fraction appears at the bottom of every section page with rotating dialogue 
 /
 ├── mr_fraction_factory.html     ← The entire app (one file)
 ├── Mr__Fraction_GIF.gif         ← Loading screen animation
+├── Mr__Fraction_Factory.png     ← Home page hero image
 ├── Mr__Fraction_Front.png       ← Home page hero image
 ├── Mr__Fraction_Left_Side.png   ← Used in lesson cards
 ├── Mr__Fraction_Right_Side.png  ← Used in lesson cards
