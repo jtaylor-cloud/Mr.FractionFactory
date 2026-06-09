@@ -7,7 +7,7 @@ An interactive, dyslexia-friendly tool for teaching fractions, decimals, and per
 ## What it does
 Students enter through a loading screen (Mr. Fraction dancing), land on the factory home page, and pick a station. Each station teaches the same numbers from a different angle — fraction, decimal, and percent — so students stop seeing them as separate topics.
 
-# Station -- Name -- What Students Do
+Station -- Name -- What Students Do
 
 01 -- Job Training -- A guided, multi-step lesson on what fractions are and how to operate on them, with Mr. Fraction dialogue that names what students are noticing and surfaces the why. Includes the multiplication area-grid model.
 
