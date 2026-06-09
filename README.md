@@ -21,14 +21,14 @@ Students enter through a loading screen (Mr. Fraction dancing), land on the fact
 
 Mr. Fraction appears at the bottom of every page except the home page.
 
-Design priorities
+## Design priorities
 
 Dyslexia-friendly first. Atkinson Hyperlegible throughout, generous spacing, high contrast, and plain-language explanations.
 Dialogue does real work. Mr. Fraction names the pattern a student is seeing rather than just cheering them on, and consistently ties fractions, decimals, and percents back together.
 Visuals are the lesson, not decoration. The Station 01 lesson grid deliberately mirrors the Station 03 operations tool, so students practice on the exact visual they were taught with.
 Pedagogical accuracy is non-negotiable. Example: the multiplication area model uses a dynamic multi-unit grid so improper fractions are handled correctly, instead of falsely teaching that products are always smaller.
 
-Tech
+## Tech
 
 Single self-contained HTML file — no build tools, no frameworks, no dependencies to install.
 Plain HTML / CSS / JavaScript.
