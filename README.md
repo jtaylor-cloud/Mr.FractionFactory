@@ -44,18 +44,26 @@ Image assets
 All images are referenced by their exact filenames and must live in the repo root alongside the HTML:
 
 Mr__Fraction_Front.png
+
 Mr__Fraction_Back.png
+
 Mr__Fraction_Left_Side.png
+
 Mr__Fraction_Right_Side.png
+
 Mr__Fraction_Ladder.png
+
 Mr__Fraction_Factory.png
+
 Mr__Fraction_GIF.gif
+
 Gear.png
+
 Pie.png
+
 Pizza.png
 
 Don't rename these or change their extensions — the file references them directly, and there are no fallbacks.
----
 
 ## License
 
