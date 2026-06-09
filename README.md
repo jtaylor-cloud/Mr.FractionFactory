@@ -1,13 +1,21 @@
 Mr. Fraction's Factory
 
 An interactive, dyslexia-friendly tool for teaching fractions, decimals, and percentages to middle school students. Everything lives in a single self-contained HTML file styled as a factory that produces fractions, with Mr. Fraction guiding students through every step.
+
 🔗 Live site: jtaylor-cloud.github.io/Mr.FractionFactory
-Show Image
 
 What it does
 Students enter through a loading screen (Mr. Fraction dancing), land on the factory home page, and pick a station. Each station teaches the same numbers from a different angle — fraction, decimal, and percent — so students stop seeing them as separate topics.
-StationNameWhat students do01Job TrainingA guided, multi-step lesson on what fractions are and how to operate on them, with Mr. Fraction dialogue that names what students are noticing and surfaces the why. Includes the multiplication area-grid model.02SimplifierReduce fractions to lowest terms with a full Euclidean-algorithm engine, animated step reveals, and canvas pie charts.03OperationsAdd, subtract, multiply, and divide fractions with visual area models, sign toggles, LCD coaching, and division-bracket arrows.04ConverterTurn fractions into decimals and percentages with pie charts, number lines, and percent bars shown side by side.05Assessment BaySeven randomized, gamified challenges across three difficulty tiers. Ships only on 100% correctness, with "Try Again" on every challenge and a Certificate of Completion at the end.
+
+Station -- Name -- What Students DO
+01 -- Job Training -- A guided, multi-step lesson on what fractions are and how to operate on them, with Mr. Fraction dialogue that names what students are noticing and surfaces the why. Includes the multiplication area-grid model.
+02 -- Simplifier -- Reduce fractions to lowest terms with a full Euclidean-algorithm engine, animated step reveals, and canvas pie charts.
+03 -- Operations -- Add, subtract, multiply, and divide fractions with visual area models, sign toggles, LCD coaching, and division-bracket arrows.
+04 -- Converter --Turn fractions into decimals and percentages with pie charts, number lines, and percent bars shown side by side.
+05 -- Factory Floor -- Seven randomized, gamified challenges across three difficulty tiers. Ships only on 100% correctness, with "Try Again" on every challenge and a Certificate of Completion at the end.
+
 Mr. Fraction appears at the bottom of every page except the home page.
+
 Design priorities
 
 Dyslexia-friendly first. Atkinson Hyperlegible throughout, generous spacing, high contrast, and plain-language explanations.
