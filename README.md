@@ -1,4 +1,4 @@
-Mr. Fraction's Factory
+## Mr. Fraction's Factory
 
 An interactive, dyslexia-friendly tool for teaching fractions, decimals, and percentages to middle school students. Everything lives in a single self-contained HTML file styled as a factory that produces fractions, with Mr. Fraction guiding students through every step.
 
