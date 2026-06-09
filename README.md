@@ -1,107 +1,43 @@
-# 🏭 Mr. Fraction Factory
+Mr. Fraction's Factory
 
-**An interactive, dyslexia-friendly fraction learning website for middle school students**
+An interactive, dyslexia-friendly tool for teaching fractions, decimals, and percentages to middle school students. Everything lives in a single self-contained HTML file styled as a factory that produces fractions, with Mr. Fraction guiding students through every step.
+🔗 Live site: jtaylor-cloud.github.io/Mr.FractionFactory
+Show Image
 
-Live site → `https://jtaylor-cloud.github.io/Mr.FractionFactory/`
+What it does
+Students enter through a loading screen (Mr. Fraction dancing), land on the factory home page, and pick a station. Each station teaches the same numbers from a different angle — fraction, decimal, and percent — so students stop seeing them as separate topics.
+StationNameWhat students do01Job TrainingA guided, multi-step lesson on what fractions are and how to operate on them, with Mr. Fraction dialogue that names what students are noticing and surfaces the why. Includes the multiplication area-grid model.02SimplifierReduce fractions to lowest terms with a full Euclidean-algorithm engine, animated step reveals, and canvas pie charts.03OperationsAdd, subtract, multiply, and divide fractions with visual area models, sign toggles, LCD coaching, and division-bracket arrows.04ConverterTurn fractions into decimals and percentages with pie charts, number lines, and percent bars shown side by side.05Assessment BaySeven randomized, gamified challenges across three difficulty tiers. Ships only on 100% correctness, with "Try Again" on every challenge and a Certificate of Completion at the end.
+Mr. Fraction appears at the bottom of every page except the home page.
+Design priorities
 
----
+Dyslexia-friendly first. Atkinson Hyperlegible throughout, generous spacing, high contrast, and plain-language explanations.
+Dialogue does real work. Mr. Fraction names the pattern a student is seeing rather than just cheering them on, and consistently ties fractions, decimals, and percents back together.
+Visuals are the lesson, not decoration. The Station 01 lesson grid deliberately mirrors the Station 03 operations tool, so students practice on the exact visual they were taught with.
+Pedagogical accuracy is non-negotiable. Example: the multiplication area model uses a dynamic multi-unit grid so improper fractions are handled correctly, instead of falsely teaching that products are always smaller.
 
-## What It Is
+Tech
 
-Mr. Fraction Factory is a single-file static HTML learning tool built for middle schoolers who are just getting comfortable with fractions. It runs entirely in the browser — no server, no login, no tracking. Just open the page and start learning.
+Single self-contained HTML file — no build tools, no frameworks, no dependencies to install.
+Plain HTML / CSS / JavaScript.
+Google Fonts CDN for Atkinson Hyperlegible (plus Black Han Sans and Libre Baskerville for display/certificate text).
+Pointer-events drag-and-drop for cross-device support (mouse, touch, and Chromebook).
+Deployed via GitHub Pages.
 
-The site is structured like a factory where Mr. Fraction (your animated guide) runs the machines that build, simplify, operate on, and convert fractions. Every section is self-contained and can be used standalone or as part of a lesson sequence.
-
----
-
-## What's Inside
-
-| Section | What Students Do |
-|---|---|
-| **Lesson** | Read and interact with a step-by-step explanation of what fractions are, what numerators and denominators mean, and how fractions, decimals, and percentages are all the same thing |
-| **Simplify** | Enter any fraction, see its factors highlighted, find the GCF, and watch the fraction reduce step by step |
-| **Operate** | Build two fractions with sliders, choose +, −, ×, or ÷, and see a color-coded visual bar or grid showing exactly what the operation means |
-| **Convert** | Slide between fraction, decimal, and percentage representations simultaneously — all three update live |
-
-Mr. Fraction appears at the bottom of every section page with rotating dialogue that ties the math together. He doesn't just cheer — he asks questions, makes connections, and challenges students to explain what they see.
-
----
-
-## File Structure
-
-```
-/
-├── mr_fraction_factory.html     ← The entire app (one file)
-├── Mr__Fraction_GIF.gif         ← Loading screen animation
-├── Mr__Fraction_Factory.png     ← Home page hero image
-├── Mr__Fraction_Front.png       ← Home page hero image
-├── Mr__Fraction_Left_Side.png   ← Used in lesson cards
-├── Mr__Fraction_Right_Side.png  ← Used in lesson cards
-├── Mr__Fraction_Back.png        ← Used in factory scenes
-├── Mr__Fraction_Ladder.png      ← Decorative / section headers
-├── Pizza.png                    ← Interactive pizza in the lesson
-├── Pie.png                      ← Used in the converter section
-├── Gear.png                     ← Factory theme decoration
-└── README.md                    ← This file
-```
-
-All images are referenced as relative paths — keep them in the same directory as the HTML file.
-
----
-
-## Hosting on GitHub Pages
-
-1. Create a new GitHub repository (public)
-2. Upload `mr_fraction_factory.html` and all `.png` / `.gif` files to the root of the repo
-3. Go to **Settings → Pages**
-4. Under **Source**, select `Deploy from a branch` → `main` → `/ (root)`
-5. Click **Save**
-6. Your site will be live at `https://<your-username>.github.io/<repo-name>/mr_fraction_factory.html` within a minute or two
-
-If you want the site to load at the root URL without the filename, rename `mr_fraction_factory.html` to `index.html`.
-
----
-
-## Design Decisions
-
-**Dyslexia-Friendly**
-The site uses [Atkinson Hyperlegible](https://brailleinstitute.org/freefont), a font designed specifically for readers with low vision and dyslexia. Font sizes are large, line height is generous, and color is never the only way information is conveyed.
-
-**No Base64 Images**
-Images are loaded as external `.png` and `.gif` files. This keeps the HTML file lightweight and readable, and makes it easy to swap or update character art without touching the code.
-
-**Single File (Mostly)**
-All CSS and JavaScript live inside `mr_fraction_factory.html`. The only external dependencies are the Google Fonts CDN (for Atkinson Hyperlegible) and the image files. The site works offline if you pre-load the font or remove the Google Fonts link.
-
-**Factory Theme**
-The warm cream-and-brown palette (`#f5ede0`, `#2c2214`, `#c8b89a`) and gear/conveyor-belt visual language carry through every section. Mr. Fraction's dialogue changes dynamically based on what the student is doing — he's not a static decoration.
-
----
-
-## Accessibility Notes
-
-- Minimum font size is 13px; most body text is 15–16px
-- All interactive controls (sliders, buttons) have visible focus states
-- Color contrast meets WCAG AA for all text on backgrounds
-- The pizza and pie visuals include `alt` text
-- Mr. Fraction's speech is rendered as readable text, not just decorative
-
----
-
-## Customizing
-
-**Swap the character art** — replace any `.png` file with your own, keeping the same filename. The HTML references filenames directly, so no code changes needed.
-
-**Change dialogue** — search for the `mrDialogues` array in the HTML source. Each section has its own rotating list of quotes. Add, remove, or edit freely.
-
-**Add a new section** — each section is a `<section id="phase-X">` block. Copy an existing one, update the nav button in the home screen, and wire it up in the `showPhase()` function.
-
----
-
-## Browser Support
-
-Works in all modern browsers (Chrome, Firefox, Safari, Edge). No IE support — range input styling and CSS Grid are both used extensively.
-
+Running it
+Just open mr_fraction_factory.html in a browser — or visit the live site above. No server or setup required.
+Image assets
+All images are referenced by their exact filenames and must live in the repo root alongside the HTML:
+Mr__Fraction_Front.png
+Mr__Fraction_Back.png
+Mr__Fraction_Left_Side.png
+Mr__Fraction_Right_Side.png
+Mr__Fraction_Ladder.png
+Mr__Fraction_Factory.png
+Mr__Fraction_GIF.gif
+Gear.png
+Pie.png
+Pizza.png
+Don't rename these or change their extensions — the file references them directly, and there are no fallbacks.
 ---
 
 ## License
