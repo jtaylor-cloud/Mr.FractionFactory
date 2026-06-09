@@ -4,10 +4,10 @@ An interactive, dyslexia-friendly tool for teaching fractions, decimals, and per
 
 🔗 Live site: jtaylor-cloud.github.io/Mr.FractionFactory
 
-What it does
+## What it does
 Students enter through a loading screen (Mr. Fraction dancing), land on the factory home page, and pick a station. Each station teaches the same numbers from a different angle — fraction, decimal, and percent — so students stop seeing them as separate topics.
 
-Station -- Name -- What Students D0
+Station -- Name -- What Students Do
 
 01 -- Job Training -- A guided, multi-step lesson on what fractions are and how to operate on them, with Mr. Fraction dialogue that names what students are noticing and surfaces the why. Includes the multiplication area-grid model.
 
@@ -36,10 +36,13 @@ Google Fonts CDN for Atkinson Hyperlegible (plus Black Han Sans and Libre Basker
 Pointer-events drag-and-drop for cross-device support (mouse, touch, and Chromebook).
 Deployed via GitHub Pages.
 
-Running it
+## Running it
+
 Just open mr_fraction_factory.html in a browser — or visit the live site above. No server or setup required.
+
 Image assets
 All images are referenced by their exact filenames and must live in the repo root alongside the HTML:
+
 Mr__Fraction_Front.png
 Mr__Fraction_Back.png
 Mr__Fraction_Left_Side.png
@@ -50,6 +53,7 @@ Mr__Fraction_GIF.gif
 Gear.png
 Pie.png
 Pizza.png
+
 Don't rename these or change their extensions — the file references them directly, and there are no fallbacks.
 ---
 
