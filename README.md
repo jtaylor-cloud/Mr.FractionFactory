@@ -14,7 +14,7 @@ Students enter through a loading screen (Mr. Fraction dancing), land on the fact
 
 | Station | Name | What students do |
 |--------|------|------------------|
-| 01 | **Job Training** | Two training bays. **Bay A — What Fractions Are** (10 steps) covers what a fraction is, what each number controls, equivalence, the number line, negatives, and why some decimals never end. **Bay B — Working With Fractions** (6 steps) covers mixed numbers, the GCF, adding and subtracting, multiplying, and dividing. Students pick a bay and can switch at any time. |
+| 01 | **Job Training** | Two bays and a workshop. **Bay A — What Fractions Are** (10 steps): what a fraction is, what each number controls, equivalence, the number line, negatives, and why some decimals never end. **Bay B — Working With Fractions** (7 steps): mixed numbers, the GCF, adding and subtracting, percents, multiplying, and dividing. **Division Workshop** (3 steps, optional): a refresher on remainders and "bring down a zero". Students pick a door and can switch at any time. |
 | 02 | **Simplifier** | Reduce fractions to lowest terms with a full Euclidean-algorithm engine, animated step reveals, and canvas pie charts. |
 | 03 | **Operations** | Add, subtract, multiply, and divide fractions with visual area models, sign toggles, LCD coaching, and division-bracket arrows. |
 | 04 | **Converter** | Change any value — fraction, decimal, or percent — and watch the others follow, with pie charts, number lines and percent bars side by side. Includes **The Remainder Belt**, a working long-division machine. |
@@ -41,31 +41,52 @@ Mr. Fraction appears at the bottom of every page except the home page.
 1. **The Repackaging Line** — improper ↔ mixed numbers; the leftover pieces *are* the remainder
 2. Finding the GCF — the Euclidean machine
 3. **The Mixing Line** — adding and subtracting. Combining fails first, which is how the common denominator earns its existence
-4. Multiplying Fractions — read the grid
-5. **The Measuring Line** — division as measurement ("how many of these fit inside that?"), then why you flip
+4. **The Hundred Mould** — percent as a denominator, not an operation
+5. Multiplying Fractions — read the grid
+6. **The Measuring Line** — division as measurement ("how many of these fit inside that?"), then why you flip
 
-## The repeating-decimal thread
+**Division Workshop** *(optional, reachable from any machine that needs it)*
 
-Repeating decimals run through the whole site rather than sitting in one lesson:
+1. **What's Left Over** — share things into groups and meet the remainder as the bit that genuinely will not fit
+2. **Bring Down a Zero** — swap each leftover for ten smaller pieces and keep dividing
 
-- **Correct notation everywhere.** A repeating decimal renders with a proper vinculum — `0.416` with a bar over the 6, not `0.4167`. The bar covers only the digits that actually repeat.
-- **Station 01** teaches *that* it happens and the rule that predicts it: denominators built only from 2s and 5s terminate, because 10 = 2 × 5.
-- **Station 04's Remainder Belt** teaches *why* it is unavoidable. A crate carries each remainder to a stamper; if the remainder is not zero, a return chute sends it back and the machine runs again. On a repeating decimal it physically cannot stop — the student has to shut it down. It prints the real long division as it goes.
+The workshop is deliberately outside both bays. A confident student never opens it; a struggling one reaches it from a **🔧 Shaky on division?** button inside the Dividing Machine, the Repackaging Line, the Measuring Line, or Station 04's Remainder Belt. It remembers which bay and step they came from — or which station — and hands them back there when they finish.
+
+## One rule, three forms
+
+The site's spine is that a fraction, its decimal, and its percent are one number, and that a single rule governs all three.
+
+- **A fraction is a division.** The bar means divide. Run it and you get the decimal.
+- **A percent is a denominator.** "Per cent" means *per hundred*, so a percent is the same fraction re-cut into a mould of 100 — not a calculation.
+- **The same rule decides both.** A denominator built only from **2s and 5s** gives a decimal that stops, because 10 = 2 × 5. And **100 = 2 × 2 × 5 × 5**, so that identical rule decides whether the percent is clean. A fraction with a repeating decimal has a repeating percent for exactly the same reason — verified across every fraction with a denominator below 100.
+
+Repeating decimals then run through the whole site rather than sitting in one lesson:
+
+- **Correct notation everywhere.** A repeating decimal renders with a proper vinculum, and the bar covers only the digits that actually repeat.
+- **Station 01** teaches *that* it happens and the 2s-and-5s rule that predicts it.
+- **Station 04's Remainder Belt** teaches *why* it is unavoidable. A crate carries each remainder to a stamper; if the remainder is not zero, a return chute sends it back. On a repeating decimal the machine physically cannot stop — the student has to shut it down. It prints the real long division as it goes.
 - **Challenge 9 (Stamp the Bar)** assesses the skill students actually fail: placing the bar over exactly one period, starting where the repeat truly starts.
 
 ## Design priorities
 
 - **Dyslexia-friendly first.** [Atkinson Hyperlegible](https://fonts.google.com/specimen/Atkinson+Hyperlegible) throughout, generous spacing, high contrast, left-aligned body text, and plain-language explanations.
-- **Dialogue does real work.** Mr. Fraction runs on a small learner model built only from what a student actually does — which fractions they explore, how many terminating versus repeating cases they meet, their prediction accuracy. Lines are chosen to fit where they are, and probes are computed from their own history ("Everything you have tried has stopped neatly. Try 1/6 — what will it do?"). After repeated wrong answers he narrows the question, then states the rule outright rather than asking a fifth riddle.
-- **Discovery is withheld, not announced.** The Sevenths Wheel will not tell you the pattern until you have checked all six. The Dividing Machine makes you call it before it runs.
-- **Visuals are the lesson, not decoration.** The Station 01 lesson grid deliberately mirrors the Station 03 operations tool, so students practice on the exact visual they were taught with.
-- **Pedagogical accuracy is non-negotiable.** The multiplication area model uses a dynamic multi-unit grid so improper fractions are handled correctly, instead of falsely teaching that products are always smaller. There is exactly one long-division implementation in the file, shared by every machine that needs it.
+- **Let it fail first.** The Mixing Line refuses to add 1/4 and 1/6 and shows the mismatched pieces, so the common denominator is discovered as a solution to a problem the student just hit. The Dividing Machine makes you call it before it runs.
+- **Discovery is withheld, not announced.** The Sevenths Wheel will not tell you the pattern until you have checked all six.
+- **Dialogue does real work.** Mr. Fraction runs on a small learner model built only from what a student actually does — which fractions they explore, how many terminating versus repeating cases they meet, their prediction accuracy. Probes are computed from their own history. After repeated wrong answers he narrows the question, then states the rule outright rather than asking a fifth riddle.
+- **Pedagogical accuracy is non-negotiable.** The multiplication area model uses a dynamic multi-unit grid so improper fractions are handled correctly. There is exactly one long-division implementation in the file, shared by every machine that needs it.
 
 ## Accessibility notes
 
-- The repeating-decimal bar is drawn with a CSS `border-top`, **not** the Unicode combining overline (U+0305), which renders inconsistently across fonts and is mangled by screen readers. The visual form is `aria-hidden`, with a spoken form supplied alongside ("zero point four one, six repeating").
+- The repeating-decimal bar is drawn with a CSS `border-top`, **not** the Unicode combining overline (U+0305), which renders inconsistently across fonts and is mangled by screen readers. The visual form is `aria-hidden`, with a spoken form supplied alongside.
 - Interactive controls prefer **▲▼ buttons over drag-and-drop** for touch and Chromebook reliability. Challenge 1 still offers drag, implemented with pointer events so it works with mouse and touch alike.
-- Colour is never the only signal: cut lines, fills and stripes are chosen to differ in lightness as well as hue.
+- Colour is never the only signal: fills and cut lines differ in lightness as well as hue.
+
+## Mobile
+
+- Station 03's controls stack below 700px — the label moves above the slider, which previously left the slider about 3px wide on a 320px phone.
+- Every numeric field opens the right keypad: `inputmode="numeric"` for whole numbers, `inputmode="decimal"` for the decimal and percent boxes.
+- Station 03 gained typed number entry for whole numbers, denominator and numerator, so nobody has to tap a 5px cell.
+- Page gutters tighten below 600px, and `@media (pointer: coarse)` puts a 40px minimum on small controls.
 
 ## Tech
 
